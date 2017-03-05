@@ -6,10 +6,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import LinearSVC
 
-import detection.norm_shuffle as feature
+import norm_shuffle as feature
 
-not_car_images = glob.glob("non-vehicles_smallset/*/*.jpeg")
-car_images = glob.glob("vehicles_smallset/*/*.jpeg")
+not_car_images = glob.glob("non-vehicles/*/*.png")
+car_images = glob.glob("vehicles/*/*.png")
 cars = []
 notcars = []
 

@@ -6,7 +6,7 @@ import glob
 import time
 from sklearn.svm import LinearSVC
 from sklearn.preprocessing import StandardScaler
-from detection.lesson_functions import *
+from lesson_functions import *
 from sklearn.model_selection import train_test_split
 
 
@@ -88,8 +88,8 @@ def search_windows(img, windows, clf, scaler, color_space='RGB', spatial_size=(3
 
 if __name__ == '__main__':
     # Read in cars and notcars
-    not_car_images = glob.glob("non-vehicles_smallset/*/*.jpeg")
-    car_images = glob.glob("vehicles_smallset/*/*.jpeg")
+    not_car_images = glob.glob("non-vehicles/*/*.png")
+    car_images = glob.glob("vehicles/*/*.png")
     cars = []
     notcars = []
 
@@ -148,7 +148,7 @@ if __name__ == '__main__':
     # Check the prediction time for a single sample
     t = time.time()
 
-    image = mpimg.imread('images/bbox-example-image.jpg')
+    image = mpimg.imread('test_images/bbox-example-image.jpg')
     draw_image = np.copy(image)
 
     # Uncomment the following line if you extracted training

@@ -7,8 +7,8 @@ import matplotlib.image as mpimg
 from sklearn.preprocessing import StandardScaler
 import glob
 
-import detection.spatial_bin as spatial
-import detection.color_histogram as histogram
+import spatial_bin as spatial
+import color_histogram as histogram
 
 
 # Define a function to extract features from a list of images
@@ -31,8 +31,8 @@ def extract_features(imgs, cspace='RGB', spatial_size=(32, 32), hist_bins=32, hi
 
 
 if __name__ == '__main__':
-    not_car_images = glob.glob("non-vehicles_smallset/*/*.jpeg")
-    car_images = glob.glob("vehicles_smallset/*/*.jpeg")
+    not_car_images = glob.glob("non-vehicles/*/*.png")
+    car_images = glob.glob("vehicles/*/*.png")
     cars = []
     notcars = []
 

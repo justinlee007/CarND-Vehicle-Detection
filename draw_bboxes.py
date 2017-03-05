@@ -21,7 +21,7 @@ def draw_boxes(img, bboxes, color=(0, 0, 255), thick=6):
 
 
 if __name__ == '__main__':
-    image = mpimg.imread('images/bbox-example-image.jpg')
+    image = mpimg.imread('test_images/bbox-example-image.jpg')
     # Add bounding boxes in this format, these are just example coordinates.
     bboxes = [((100, 100), (200, 200)), ((300, 300), (400, 400))]
 

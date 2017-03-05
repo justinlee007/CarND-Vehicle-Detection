@@ -36,8 +36,8 @@ def get_hog_features(img, orient, pix_per_cell, cell_per_block, vis=False, featu
 
 
 if __name__ == '__main__':
-    not_car_images = glob.glob("non-vehicles_smallset/*/*.jpeg")
-    car_images = glob.glob("vehicles_smallset/*/*.jpeg")
+    not_car_images = glob.glob("non-vehicles/*/*.png")
+    car_images = glob.glob("vehicles/*/*.png")
     cars = []
     notcars = []
 

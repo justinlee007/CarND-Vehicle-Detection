@@ -4,11 +4,9 @@ import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
-import detection.draw_bboxes as boxes
+import draw_bboxes as boxes
 
-image = mpimg.imread('bbox-example-image.jpg')
-templist = ['cutout1.jpg', 'cutout2.jpg', 'cutout3.jpg',
-            'cutout4.jpg', 'cutout5.jpg', 'cutout6.jpg']
+import glob
 
 
 # Define a function to search for template matches and return a list of bounding boxes
@@ -41,6 +39,8 @@ def find_matches(img, template_list):
 
 
 if __name__ == '__main__':
+    image = mpimg.imread('test_images/bbox-example-image.jpg')
+    templist = glob.glob("test_images/cutout*.jpg")
     bboxes = find_matches(image, templist)
     result = boxes.draw_boxes(image, bboxes)
     plt.imshow(result)

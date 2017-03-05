@@ -5,7 +5,7 @@ import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 import numpy as np
 
-import detection.draw_bboxes as boxes
+import draw_bboxes as boxes
 
 
 def slide_window(img, x_start_stop=[None, None], y_start_stop=[None, None], xy_window=(64, 64), xy_overlap=(0.5, 0.5)):
@@ -57,7 +57,7 @@ def slide_window(img, x_start_stop=[None, None], y_start_stop=[None, None], xy_w
 
 
 if __name__ == '__main__':
-    image = mpimg.imread('images/bbox-example-image.jpg')
+    image = mpimg.imread('test_images/bbox-example-image.jpg')
     y = image.shape[0]
     y_start = 400  # for size=64 and 128
     # y_start = 336 # for size = 256

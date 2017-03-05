@@ -33,7 +33,7 @@ def bin_spatial(img, color_space='RGB', size=(32, 32)):
 
 
 if __name__ == '__main__':
-    images = glob.glob("./images/cutout*.jpg")
+    images = glob.glob("test_images/cutout*.jpg")
 
     for file_name in images:
         # Read in an image

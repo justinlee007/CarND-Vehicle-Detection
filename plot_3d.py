@@ -38,7 +38,7 @@ def plot3d(pixels, colors_rgb, axis_labels=list("RGB"), axis_limits=[(0, 255), (
 
 
 if __name__ == '__main__':
-    images = glob.glob("./images/*.png")
+    images = glob.glob("test_images/*.png")
 
     for file_name in images:
         # Read a color image

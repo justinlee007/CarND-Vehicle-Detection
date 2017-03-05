@@ -22,7 +22,7 @@ def color_hist(img, nbins=32, bins_range=(0, 256)):
 
 
 if __name__ == '__main__':
-    image = mpimg.imread('images/cutout1.jpg')
+    image = mpimg.imread('test_images/cutout1.jpg')
     rh, gh, bh, bincen, feature_vec = color_hist(image, nbins=32, bins_range=(0, 256))
 
     # Plot a figure with all three bar charts
