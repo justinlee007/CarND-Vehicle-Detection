@@ -8,8 +8,8 @@ from sklearn.svm import LinearSVC
 
 import norm_shuffle as feature
 
-not_car_images = glob.glob("non-vehicles/*/*.png")
-car_images = glob.glob("vehicles/*/*.png")
+not_car_images = glob.glob("non-vehicles_smallset/*/*.jpeg")
+car_images = glob.glob("vehicles_smallset/*/*.jpeg")
 cars = []
 notcars = []
 
@@ -25,9 +25,9 @@ spatial = 40
 histbin = 72
 
 car_features = feature.extract_features(cars, cspace='RGB', spatial_size=(spatial, spatial), hist_bins=histbin,
-                                        hist_range=(0, 256))
+                                        hist_range=(0, 255))
 notcar_features = feature.extract_features(notcars, cspace='RGB', spatial_size=(spatial, spatial), hist_bins=histbin,
-                                           hist_range=(0, 256))
+                                           hist_range=(0, 255))
 
 # Create an array stack of feature vectors
 X = np.vstack([car_features, notcar_features]).astype(np.float64)

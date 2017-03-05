@@ -51,23 +51,20 @@ def extract_features(imgs, cspace='RGB', orient=9, pix_per_cell=8, cell_per_bloc
     # Return list of feature vectors
     return features
 
+
 if __name__ == '__main__':
-    not_car_images = glob.glob("non-vehicles/*/*.png")
-    car_images = glob.glob("vehicles/*/*.png")
+    not_car_images = glob.glob("non-vehicles_smallset/*/*.jpeg")
+    car_images = glob.glob("vehicles_smallset/*/*.jpeg")
     cars = []
     notcars = []
 
     print("not_car_images size={}, car_images size={}".format(len(not_car_images), len(car_images)))
-    for image in not_car_images:
-        notcars.append(image)
     for image in car_images:
         cars.append(image)
-
-    # Reduce the sample size because HOG features are slow to compute
-    # The quiz evaluator times out after 13s of CPU time
-    sample_size = 500
-    cars = cars[0:sample_size]
-    notcars = notcars[0:sample_size]
+    for image in not_car_images:
+        if len(notcars) > len(cars):
+            break;
+        notcars.append(image)
 
     ### TODO: Tweak these parameters and see how the results change.
     colorspace = 'YUV'  # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
@@ -97,11 +94,9 @@ if __name__ == '__main__':
 
     # Split up data into randomized training and test sets
     rand_state = np.random.randint(0, 100)
-    X_train, X_test, y_train, y_test = train_test_split(
-        scaled_X, y, test_size=0.2, random_state=rand_state)
+    X_train, X_test, y_train, y_test = train_test_split(scaled_X, y, test_size=0.2, random_state=rand_state)
 
-    print('Using:', orient, 'orientations', pix_per_cell,
-          'pixels per cell and', cell_per_block, 'cells per block')
+    print('Using:', orient, 'orientations', pix_per_cell, 'pixels per cell and', cell_per_block, 'cells per block')
     print('Feature vector length:', len(X_train[0]))
     # Use a linear SVC
     svc = LinearSVC()

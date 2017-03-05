@@ -29,8 +29,10 @@ def data_look(car_list, notcar_list):
 
 
 if __name__ == '__main__':
-    not_car_images = glob.glob("non-vehicles/*/*.png")
-    car_images = glob.glob("vehicles/*/*.png")
+    not_car_images = glob.glob("non-vehicles_smallset/*/*.jpeg")
+    car_images = glob.glob("vehicles_smallset/*/*.jpeg")
+    # not_car_images = glob.glob("non-vehicles/*/*.png")
+    # car_images = glob.glob("vehicles/*/*.png")
     cars = []
     notcars = []
 
