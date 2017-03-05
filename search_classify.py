@@ -41,8 +41,6 @@ def search_windows(img, windows, clf, scaler, color_space='RGB', spatial_size=(3
 if __name__ == '__main__':
     not_car_images = glob.glob("non-vehicles/*/*.png")
     car_images = glob.glob("vehicles/*/*.png")
-    # not_car_images = glob.glob("non-vehicles_smallset/*/*.jpeg")
-    # car_images = glob.glob("vehicles_smallset/*/*.jpeg")
     cars = []
     notcars = []
 
@@ -106,8 +104,7 @@ if __name__ == '__main__':
     image = mpimg.imread('test_images/bbox-example-image.jpg')
     draw_image = np.copy(image)
 
-    # Uncomment the following line if you extracted training
-    # data from .png images (scaled 0 to 1 by mpimg) and the
+    # Uncomment the following line if you extracted training data from .png images (scaled 0 to 1 by mpimg) and the
     # image you are searching is a .jpg (scaled 0 to 255)
     image = image.astype(np.float32) / 255
 

@@ -1,19 +1,16 @@
 import matplotlib
-import numpy as np
 
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
 from sklearn.preprocessing import StandardScaler
 import glob
 
-import spatial_bin as spatial
-import color_histogram as histogram
+from lesson_functions import *
 
 
 # Define a function to extract features from a list of images
 # Have this function call bin_spatial() and color_hist()
-def extract_features(imgs, cspace='RGB', spatial_size=(32, 32), hist_bins=32, hist_range=(0, 256)):
+def extract_features(imgs, spatial_size=(32, 32), hist_bins=32):
     # Create a list to append feature vectors to
     features = []
     # Iterate through the list of images
@@ -21,16 +18,16 @@ def extract_features(imgs, cspace='RGB', spatial_size=(32, 32), hist_bins=32, hi
         # Read in each one by one
         feature_image = mpimg.imread(file)
         # Apply bin_spatial() to get spatial color features
-        spatial_features = spatial.bin_spatial(feature_image, color_space=cspace, size=spatial_size)
+        spatial_features = bin_spatial(feature_image, size=spatial_size)
         # Apply color_hist() also with a color space option now
-        _, _, _, _, hist_features = histogram.color_hist(feature_image, nbins=hist_bins, bins_range=hist_range)
+        hist_features = color_hist(feature_image, nbins=hist_bins)
         # Append the new feature vector to the features list
         features.append(np.concatenate((spatial_features, hist_features)))
     # Return list of feature vectors
     return features
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     not_car_images = glob.glob("non-vehicles/*/*.png")
     car_images = glob.glob("vehicles/*/*.png")
     cars = []
@@ -42,8 +39,8 @@ if __name__ == '__main__':
     for image in car_images:
         cars.append(image)
 
-    car_features = extract_features(cars, cspace='RGB', spatial_size=(32, 32), hist_bins=32, hist_range=(0, 256))
-    notcar_features = extract_features(notcars, cspace='RGB', spatial_size=(32, 32), hist_bins=32, hist_range=(0, 256))
+    car_features = extract_features(cars, spatial_size=(32, 32), hist_bins=32)
+    notcar_features = extract_features(notcars, spatial_size=(32, 32), hist_bins=32)
 
     if len(car_features) > 0:
         # Create an array stack of feature vectors
@@ -57,13 +54,24 @@ if __name__ == '__main__':
         fig = plt.figure(figsize=(12, 4))
         plt.subplot(131)
         plt.imshow(mpimg.imread(cars[car_ind]))
-        plt.title('Original Image')
+        plt.title("Original Image (car)")
         plt.subplot(132)
         plt.plot(X[car_ind])
-        plt.title('Raw Features')
+        plt.title("Raw Features")
         plt.subplot(133)
         plt.plot(scaled_X[car_ind])
-        plt.title('Normalized Features')
+        plt.title("Normalized Features")
         plt.show()
-    else:
-        print('Your function only returns empty feature vectors...')
+        notcar_ind = np.random.randint(0, len(notcars))
+        # Plot an example of raw and scaled features
+        fig = plt.figure(figsize=(12, 4))
+        plt.subplot(131)
+        plt.imshow(mpimg.imread(notcars[notcar_ind]))
+        plt.title("Original Image (not car)")
+        plt.subplot(132)
+        plt.plot(X[notcar_ind])
+        plt.title("Raw Features")
+        plt.subplot(133)
+        plt.plot(scaled_X[notcar_ind])
+        plt.title("Normalized Features")
+        plt.show()
