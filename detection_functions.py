@@ -4,12 +4,12 @@ import numpy as np
 from skimage.feature import hog
 
 
-def convert_color(img, conv='RGB2YCrCb'):
-    if conv == 'RGB2YCrCb':
+def convert_color(img, conv="RGB2YCrCb"):
+    if conv == "RGB2YCrCb":
         return cv2.cvtColor(img, cv2.COLOR_RGB2YCrCb)
-    if conv == 'BGR2YCrCb':
+    if conv == "BGR2YCrCb":
         return cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)
-    if conv == 'RGB2LUV':
+    if conv == "RGB2LUV":
         return cv2.cvtColor(img, cv2.COLOR_RGB2LUV)
 
 
@@ -56,7 +56,7 @@ def color_hist(img, nbins=32, vis=False):
 
 # Define a function to extract features from a list of images
 # Have this function call bin_spatial() and color_hist()
-def extract_features(imgs, color_space='RGB', spatial_size=(32, 32), hist_bins=32, orient=9, pix_per_cell=8,
+def extract_features(imgs, color_space="RGB", spatial_size=(32, 32), hist_bins=32, orient=9, pix_per_cell=8,
                      cell_per_block=2, hog_channel=0, spatial_feat=True, hist_feat=True, hog_feat=True):
     # Create a list to append feature vectors to
     features = []
@@ -73,21 +73,21 @@ def extract_features(imgs, color_space='RGB', spatial_size=(32, 32), hist_bins=3
 
 # Define a function to extract features from a single image window
 # This function is very similar to extract_features() just for a single image rather than list of images
-def extract_feature(img, color_space='RGB', spatial_size=(32, 32), hist_bins=32, orient=9, pix_per_cell=8,
+def extract_feature(img, color_space="RGB", spatial_size=(32, 32), hist_bins=32, orient=9, pix_per_cell=8,
                     cell_per_block=2, hog_channel=0, spatial_feat=True, hist_feat=True, hog_feat=True):
     # 1) Define an empty list to receive features
     img_features = []
-    # 2) Apply color conversion if other than 'RGB'
-    if color_space != 'RGB':
-        if color_space == 'HSV':
+    # 2) Apply color conversion if other than "RGB"
+    if color_space != "RGB":
+        if color_space == "HSV":
             feature_image = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
-        elif color_space == 'LUV':
+        elif color_space == "LUV":
             feature_image = cv2.cvtColor(img, cv2.COLOR_RGB2LUV)
-        elif color_space == 'HLS':
+        elif color_space == "HLS":
             feature_image = cv2.cvtColor(img, cv2.COLOR_RGB2HLS)
-        elif color_space == 'YUV':
+        elif color_space == "YUV":
             feature_image = cv2.cvtColor(img, cv2.COLOR_RGB2YUV)
-        elif color_space == 'YCrCb':
+        elif color_space == "YCrCb":
             feature_image = cv2.cvtColor(img, cv2.COLOR_RGB2YCrCb)
     else:
         feature_image = np.copy(img)
@@ -103,7 +103,7 @@ def extract_feature(img, color_space='RGB', spatial_size=(32, 32), hist_bins=32,
         img_features.append(hist_features)
     # 7) Compute HOG features if flag is set
     if hog_feat == True:
-        if hog_channel == 'ALL':
+        if hog_channel == "ALL":
             hog_features = []
             for channel in range(feature_image.shape[2]):
                 hog_features.extend(
@@ -145,7 +145,7 @@ def slide_window(img, x_start_stop=[None, None], y_start_stop=[None, None], xy_w
     # Initialize a list to append window positions to
     window_list = []
     # Loop through finding x and y window positions
-    # Note: you could vectorize this step, but in practice you'll be considering windows one by one with your
+    # Note: you could vectorize this step, but in practice you"ll be considering windows one by one with your
     # classifier, so looping makes sense
     for ys in range(ny_windows):
         for xs in range(nx_windows):

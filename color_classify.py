@@ -24,9 +24,9 @@ for image in car_images:
 spatial = 40
 histbin = 72
 
-car_features = feature.extract_features(cars, cspace='RGB', spatial_size=(spatial, spatial), hist_bins=histbin,
+car_features = feature.extract_features(cars, cspace="RGB", spatial_size=(spatial, spatial), hist_bins=histbin,
                                         hist_range=(0, 255))
-notcar_features = feature.extract_features(notcars, cspace='RGB', spatial_size=(spatial, spatial), hist_bins=histbin,
+notcar_features = feature.extract_features(notcars, cspace="RGB", spatial_size=(spatial, spatial), hist_bins=histbin,
                                            hist_range=(0, 255))
 
 # Create an array stack of feature vectors

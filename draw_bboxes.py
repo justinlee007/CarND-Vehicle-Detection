@@ -2,7 +2,7 @@ import cv2
 import matplotlib
 import numpy as np
 
-matplotlib.use('TkAgg')
+matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
@@ -20,8 +20,8 @@ def draw_boxes(img, bboxes, color=(0, 0, 255), thick=6):
     return draw_img
 
 
-if __name__ == '__main__':
-    image = mpimg.imread('test_images/bbox-example-image.jpg')
+if __name__ == "__main__":
+    image = mpimg.imread("test_images/bbox-example-image.jpg")
     # Add bounding boxes in this format, these are just example coordinates.
     bboxes = [((100, 100), (200, 200)), ((300, 300), (400, 400))]
 

@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 import glob
 
-from lesson_functions import *
+from detection_functions import *
 
 
 # Define a function to extract features from a list of images

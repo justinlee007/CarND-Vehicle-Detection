@@ -5,7 +5,7 @@ import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
-from lesson_functions import *
+from detection_functions import *
 
 
 # Define a single function that can extract features using hog sub-sampling and make predictions

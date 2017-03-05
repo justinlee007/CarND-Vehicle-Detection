@@ -4,7 +4,7 @@ import cv2
 import matplotlib
 import numpy as np
 
-matplotlib.use('TkAgg')
+matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
@@ -22,7 +22,7 @@ def plot3d(pixels, colors_rgb, axis_labels=list("RGB"), axis_limits=[(0, 255), (
     ax.set_zlim(*axis_limits[2])
 
     # Set axis labels and sizes
-    ax.tick_params(axis='both', which='major', labelsize=14, pad=8)
+    ax.tick_params(axis="both", which="major", labelsize=14, pad=8)
     ax.set_xlabel(axis_labels[0], fontsize=16, labelpad=16)
     ax.set_ylabel(axis_labels[1], fontsize=16, labelpad=16)
     ax.set_zlabel(axis_labels[2], fontsize=16, labelpad=16)
@@ -32,12 +32,12 @@ def plot3d(pixels, colors_rgb, axis_labels=list("RGB"), axis_limits=[(0, 255), (
         pixels[:, :, 0].ravel(),
         pixels[:, :, 1].ravel(),
         pixels[:, :, 2].ravel(),
-        c=colors_rgb.reshape((-1, 3)), edgecolors='none')
+        c=colors_rgb.reshape((-1, 3)), edgecolors="none")
 
     return ax  # return Axes3D object for further manipulation
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     images = glob.glob("test_images/*.png")
 
     for file_name in images:

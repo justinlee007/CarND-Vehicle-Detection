@@ -1,6 +1,6 @@
 import matplotlib
 
-matplotlib.use('TkAgg')
+matplotlib.use("TkAgg")
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 import numpy as np
@@ -41,7 +41,7 @@ def slide_window(img, x_start_stop=[None, None], y_start_stop=[None, None], xy_w
     # Initialize a list to append window positions to
     window_list = []
     # Loop through finding x and y window positions
-    # Note: you could vectorize this step, but in practice you'll be considering windows one by one with your classifier
+    # Note: you could vectorize this step, but in practice you"ll be considering windows one by one with your classifier
     # so looping makes sense
     for ys in range(ny_windows):
         for xs in range(nx_windows):
@@ -56,8 +56,8 @@ def slide_window(img, x_start_stop=[None, None], y_start_stop=[None, None], xy_w
     return window_list
 
 
-if __name__ == '__main__':
-    image = mpimg.imread('test_images/bbox-example-image.jpg')
+if __name__ == "__main__":
+    image = mpimg.imread("test_images/bbox-example-image.jpg")
     y = image.shape[0]
     # y_start = 400  # for size=64 and 128
     y_start = 336 # for size = 256

@@ -1,6 +1,6 @@
 import matplotlib
 
-matplotlib.use('TkAgg')
+matplotlib.use("TkAgg")
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 import numpy as np
@@ -42,13 +42,13 @@ def draw_labeled_bboxes(img, labels):
     return img
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Read in a pickle file with bboxes saved
     # Each item in the "all_bboxes" list will contain a list of boxes for one of the images shown above
     box_list = pickle.load(open("bbox_pickle.p", "rb"))
 
     # Read in image similar to one shown above
-    image = mpimg.imread('test_image.jpg')
+    image = mpimg.imread("test_image.jpg")
     heat = np.zeros_like(image[:, :, 0]).astype(np.float)
     # Add heat to each box in box list
     heat = add_heat(heat, box_list)
@@ -66,8 +66,8 @@ if __name__ == '__main__':
     fig = plt.figure()
     plt.subplot(121)
     plt.imshow(draw_img)
-    plt.title('Car Positions')
+    plt.title("Car Positions")
     plt.subplot(122)
-    plt.imshow(heatmap, cmap='hot')
-    plt.title('Heat Map')
+    plt.imshow(heatmap, cmap="hot")
+    plt.title("Heat Map")
     plt.show()

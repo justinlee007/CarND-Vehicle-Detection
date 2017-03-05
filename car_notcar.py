@@ -1,6 +1,6 @@
 import matplotlib
 
-matplotlib.use('TkAgg')
+matplotlib.use("TkAgg")
 
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
@@ -28,7 +28,7 @@ def data_look(car_list, notcar_list):
     return data_dict
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     not_car_images = glob.glob("non-vehicles_smallset/*/*.jpeg")
     car_images = glob.glob("vehicles_smallset/*/*.jpeg")
     # not_car_images = glob.glob("non-vehicles/*/*.png")
@@ -43,10 +43,10 @@ if __name__ == '__main__':
         cars.append(image)
     data_info = data_look(cars, notcars)
 
-    print('Your function returned a count of',
-          data_info["n_cars"], ' cars and',
-          data_info["n_notcars"], ' non-cars')
-    print('of size: ', data_info["image_shape"], ' and data type:',
+    print("Your function returned a count of",
+          data_info["n_cars"], " cars and",
+          data_info["n_notcars"], " non-cars")
+    print("of size: ", data_info["image_shape"], " and data type:",
           data_info["data_type"])
     # Just for fun choose random car / not-car indices and plot example images
     car_ind = np.random.randint(0, len(cars))
@@ -60,8 +60,8 @@ if __name__ == '__main__':
     fig = plt.figure()
     plt.subplot(121)
     plt.imshow(car_image)
-    plt.title('Example Car Image')
+    plt.title("Example Car Image")
     plt.subplot(122)
     plt.imshow(notcar_image)
-    plt.title('Example Not-car Image')
+    plt.title("Example Not-car Image")
     plt.show()

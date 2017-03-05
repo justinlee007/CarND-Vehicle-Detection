@@ -6,7 +6,7 @@ import glob
 import time
 from sklearn.svm import LinearSVC
 from sklearn.preprocessing import StandardScaler
-from lesson_functions import *
+from detection_functions import *
 
 from sklearn.model_selection import train_test_split
 
