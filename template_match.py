@@ -1,11 +1,7 @@
-import cv2
 import matplotlib
 
 matplotlib.use("TkAgg")
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
-import draw_bboxes as boxes
-
+from detection_functions import *
 import glob
 
 
@@ -42,6 +38,6 @@ if __name__ == "__main__":
     image = mpimg.imread("test_images/bbox-example-image.jpg")
     templist = glob.glob("test_images/cutout*.jpg")
     bboxes = find_matches(image, templist)
-    result = boxes.draw_boxes(image, bboxes)
+    result = draw_boxes(image, bboxes)
     plt.imshow(result)
     plt.show()
