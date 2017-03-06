@@ -125,9 +125,16 @@ def extract_feature(img, color_space="RGB", spatial_size=(32, 32), hist_bins=32,
     return np.concatenate(img_features)
 
 
-# Define a function that takes an image,
-# start and stop positions in both x and y, window size (x and y dimensions), and overlap fraction (for both x and y)
 def slide_window(img, x_start_stop=[None, None], y_start_stop=[None, None], xy_window=(64, 64), xy_overlap=(0.5, 0.5)):
+    """
+    Takes an image, and returns a list of windows based on start and stop positions, window size and overlap fraction
+    :param img:
+    :param x_start_stop:
+    :param y_start_stop:
+    :param xy_window:
+    :param xy_overlap:
+    :return:
+    """
     # If x and/or y start/stop positions not defined, set to image size
     if x_start_stop[0] == None:
         x_start_stop[0] = 0
@@ -151,8 +158,8 @@ def slide_window(img, x_start_stop=[None, None], y_start_stop=[None, None], xy_w
     # Initialize a list to append window positions to
     window_list = []
     # Loop through finding x and y window positions
-    # Note: you could vectorize this step, but in practice you"ll be considering windows one by one with your
-    # classifier, so looping makes sense
+    # Note: you could vectorize this step, but in practice you"ll be considering windows one by one with your classifier
+    # so looping makes sense
     for ys in range(ny_windows):
         for xs in range(nx_windows):
             # Calculate window position
@@ -160,7 +167,6 @@ def slide_window(img, x_start_stop=[None, None], y_start_stop=[None, None], xy_w
             endx = startx + xy_window[0]
             starty = ys * ny_pix_per_step + y_start_stop[0]
             endy = starty + xy_window[1]
-
             # Append window position to list
             window_list.append(((startx, starty), (endx, endy)))
     # Return the list of windows
@@ -205,7 +211,7 @@ def draw_boxes(img, bboxes, color=(0, 0, 255), thick=6):
     return imcopy
 
 
-def load_features(use_smallset=False):
+def load_features(use_smallset=False, use_subset=False, subset_size=1000):
     if use_smallset:
         not_car_images = glob.glob("non-vehicles_smallset/*/*.jpeg")
         car_images = glob.glob("vehicles_smallset/*/*.jpeg")
@@ -219,6 +225,14 @@ def load_features(use_smallset=False):
         cars.append(image)
     for image in not_car_images:
         notcars.append(image)
+
+    if use_subset:
+        if len(cars) > subset_size:
+            random_indexes = np.random.randint(0, len(cars), subset_size)
+            cars = np.array(cars)[random_indexes]
+        if len(notcars) > subset_size:
+            random_indexes = np.random.randint(0, len(notcars), subset_size)
+            notcars = np.array(notcars)[random_indexes]
     print("len(cars)={}, len(notcars)={}".format(len(cars), len(notcars)))
     return cars, notcars
 

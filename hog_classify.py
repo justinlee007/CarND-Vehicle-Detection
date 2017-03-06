@@ -53,8 +53,8 @@ if __name__ == "__main__":
     print("Test Accuracy of SVC:\t{:.4f}".format(svc.score(X_test, y_test)))
     # Check the prediction time for a single sample
     t = time.time()
-    n_predict = 10
-    print("My SVC predicts: ", svc.predict(X_test[0:n_predict]))
-    print("For these", n_predict, "labels: ", y_test[0:n_predict])
+    n_predict = 15
+    print("My SVC predicts:\t\t{}".format(svc.predict(X_test[0:n_predict])))
+    print("For these {} labels:\t{}".format(n_predict, y_test[0:n_predict]))
     t2 = time.time()
-    print(round(t2 - t, 5), "Seconds to predict", n_predict, "labels with SVC")
+    print("Time to predict {} labels with SVC: {}s".format(n_predict, round(t2 - t, 5)))
