@@ -3,7 +3,6 @@ import pickle
 import matplotlib
 
 matplotlib.use("TkAgg")
-import time
 from sklearn.svm import LinearSVC
 from sklearn.preprocessing import StandardScaler
 from detection_functions import *
@@ -88,4 +87,3 @@ if __name__ == "__main__":
 
     train_classifier(color_space, orient, pix_per_cell, cell_per_block, hog_channel, spatial_size, hist_bins,
                      spatial_feat, hist_feat, hog_feat, save_file="svc_pickle.p")
-
