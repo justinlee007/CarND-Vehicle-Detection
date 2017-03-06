@@ -75,13 +75,11 @@ def find_cars(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, ce
 
 
 def find_cars(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins):
-    img_boxes = []
     t = time.time()
+    img_boxes = []
     count = 0
-    draw_img = np.copy(img)
     # Make a heatmap of zeros
     heatmap = np.zeros_like(img[:, :, 0])
-    # img = img.astype(np.float32) / 255
 
     img_tosearch = img[ystart:ystop, :, :]
     ctrans_tosearch = convert_color(img_tosearch, conv="RGB2YCrCb")
@@ -135,19 +133,13 @@ def find_cars(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, ce
             test_prediction = svc.predict(test_features)
 
             if test_prediction == 1:
-                print("found a window")
                 xbox_left = np.int(xleft * scale)
                 ytop_draw = np.int(ytop * scale)
                 win_draw = np.int(window * scale)
                 bboxes = ((xbox_left, (ytop_draw + ystart)), ((xbox_left + win_draw), (ytop_draw + win_draw + ystart)))
-                # cv2.rectangle(draw_img, bboxes, (0, 0, 255), 6)
-                # cv2.rectangle(draw_img, (xbox_left, ytop_draw + ystart),
-                #               (xbox_left + win_draw, ytop_draw + win_draw + ystart), (0, 0, 255), 6)
                 img_boxes.append(bboxes)
                 heatmap[ytop_draw + ystart:ytop_draw + win_draw + ystart, xbox_left: xbox_left + win_draw] += 1
 
-    if len(img_boxes) > 0:
-        draw_img = draw_boxes(draw_img, img_boxes)
     print("Runtime={:.2f}s, total windows={}".format((time.time() - t), count))
     # out_images = []
     # out_images.append(draw_image)
@@ -163,7 +155,7 @@ def find_cars(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, ce
 
     # fig = plt.figure(figsize=(12, 24))
     # visualize(fig, 8, 2, out_images, out_titles)
-    return draw_img, heatmap
+    return img_boxes, heatmap
 
 
 def load_svc(save_file="svc_pickle.p"):
@@ -188,7 +180,6 @@ if __name__ == '__main__':
     for image_file in images:
         image = mpimg.imread(image_file)
         y = image.shape[0]
-        draw_image = np.copy(image)
 
         # Uncomment the following line if you extracted training data from .png images (scaled 0 to 1 by mpimg) and the
         # image you are searching is a .jpg (scaled 0 to 255)
@@ -196,10 +187,15 @@ if __name__ == '__main__':
         print("min={}, max={}".format(np.min(image), np.max(image)))
         ystart = 400
         ystop = 656
-        scale = 1
+        scale = 1.5
 
-        out_img, _ = find_cars(image, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block,
-                               spatial_size, hist_bins)
+        img_boxes, heatmap = find_cars(image, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block,
+                                       spatial_size, hist_bins)
+        if len(img_boxes) > 0:
+            image = draw_boxes(image, img_boxes, color=(0, 0, 1), thick=6)
 
-        plt.imshow(out_img)
+        plt.imshow(image)
+        plt.show()
+
+        plt.imshow(heatmap)
         plt.show()
