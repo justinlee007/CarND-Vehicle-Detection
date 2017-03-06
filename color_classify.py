@@ -1,10 +1,9 @@
-import time
+import matplotlib
 
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.svm import LinearSVC
+matplotlib.use("TkAgg")
+import matplotlib.pyplot as plt
 
-from detection import *
+from trainer import *
 
 cars, notcars = load_features()
 

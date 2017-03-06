@@ -1,8 +1,10 @@
+import glob
+
 import matplotlib
 
 matplotlib.use("TkAgg")
-from detection import *
-import glob
+import matplotlib.pyplot as plt
+from pipeline import *
 
 
 # Define a function to search for template matches and return a list of bounding boxes

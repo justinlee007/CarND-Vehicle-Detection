@@ -1,4 +1,3 @@
-import glob
 import time
 
 import cv2
@@ -6,7 +5,6 @@ import matplotlib
 
 matplotlib.use("TkAgg")
 import matplotlib.image as mpimg
-import matplotlib.pyplot as plt
 import numpy as np
 from skimage.feature import hog
 
@@ -212,34 +210,6 @@ def find_cars(img, y_start, y_stop, scale, svc, X_scaler, orient, pix_per_cell, 
     return img_boxes, heatmap
 
 
-# Define a function to draw bounding boxes
-def draw_boxes(img, bboxes, color=(0, 0, 255), thick=6):
-    # Make a copy of the image
-    imcopy = np.copy(img)
-    # Iterate through the bounding boxes
-    for bbox in bboxes:
-        # Draw a rectangle given bbox coordinates
-        cv2.rectangle(imcopy, bbox[0], bbox[1], color, thick)
-    # Return the image copy with boxes drawn
-    return imcopy
-
-
-def draw_labeled_bboxes(img, labels):
-    # Iterate through all detected cars
-    bboxes = []
-    for car_number in range(1, labels[1] + 1):
-        # Find pixels with each car_number label value
-        nonzero = (labels[0] == car_number).nonzero()
-        # Identify x and y values of those pixels
-        nonzeroy = np.array(nonzero[0])
-        nonzerox = np.array(nonzero[1])
-        # Define a bounding box based on min/max x and y
-        bbox = (np.min(nonzerox), np.min(nonzeroy)), (np.max(nonzerox), np.max(nonzeroy))
-        bboxes.append(bbox)
-    # Draw the boxes on the image
-    return draw_boxes(img, bboxes, color=(0, 0, 1), thick=6)
-
-
 def add_heat(heatmap, bbox_list):
     # Iterate through list of bboxes
     for box in bbox_list:
@@ -248,50 +218,3 @@ def add_heat(heatmap, bbox_list):
 
     # Return updated heatmap
     return heatmap  # Iterate through list of bboxes
-
-
-def apply_threshold(heatmap, threshold):
-    # Zero out pixels below the threshold
-    heatmap[heatmap <= threshold] = 0
-    # Return thresholded map
-    return heatmap
-
-
-def load_features(use_smallset=False, use_subset=False, subset_size=1000):
-    if use_smallset:
-        not_car_images = glob.glob("non-vehicles_smallset/*/*.jpeg")
-        car_images = glob.glob("vehicles_smallset/*/*.jpeg")
-    else:
-        not_car_images = glob.glob("non-vehicles/*/*.png")
-        car_images = glob.glob("vehicles/*/*.png")
-    cars = []
-    notcars = []
-
-    for image in car_images:
-        cars.append(image)
-    for image in not_car_images:
-        notcars.append(image)
-
-    if use_subset:
-        if len(cars) > subset_size:
-            random_indexes = np.random.randint(0, len(cars), subset_size)
-            cars = np.array(cars)[random_indexes]
-        if len(notcars) > subset_size:
-            random_indexes = np.random.randint(0, len(notcars), subset_size)
-            notcars = np.array(notcars)[random_indexes]
-    print("len(cars)={}, len(notcars)={}".format(len(cars), len(notcars)))
-    return cars, notcars
-
-
-# Define a function for plotting multiple images
-def visualize(fig, rows, cols, imgs, titles):
-    for i, img in enumerate(imgs):
-        plt.subplot(rows, cols, i + 1)
-        plt.title(i + 1)
-        img_dims = len(img.shape)
-        if img_dims < 3:
-            plt.imshow(img, cmap="hot")
-        else:
-            plt.imshow(img)
-        plt.title(titles[i])
-    plt.show()

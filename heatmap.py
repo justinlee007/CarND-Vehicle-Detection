@@ -1,8 +1,10 @@
 import matplotlib
 
 matplotlib.use("TkAgg")
+import matplotlib.pyplot as plt
 
 from trainer import *
+from pipeline import *
 from scipy.ndimage.measurements import label
 
 if __name__ == "__main__":

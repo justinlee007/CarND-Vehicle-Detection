@@ -2,7 +2,9 @@ import matplotlib
 
 matplotlib.use("TkAgg")
 
-from detection import *
+import matplotlib.pyplot as plt
+
+from trainer import *
 
 
 # Define a function to return some characteristics of the dataset

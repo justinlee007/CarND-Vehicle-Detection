@@ -1,9 +1,8 @@
 import matplotlib
 
 matplotlib.use('TkAgg')
-from sklearn.preprocessing import StandardScaler
-
-from detection import *
+import matplotlib.pyplot as plt
+from trainer import *
 
 if __name__ == "__main__":
     cars, notcars = load_features()

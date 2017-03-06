@@ -1,10 +1,4 @@
-import time
-
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.svm import LinearSVC
-
-from detection import *
+from trainer import *
 
 if __name__ == "__main__":
     cars, notcars = load_features()

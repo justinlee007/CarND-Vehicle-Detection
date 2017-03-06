@@ -1,3 +1,4 @@
+import glob
 import pickle
 
 import matplotlib
@@ -58,6 +59,32 @@ def train_classifier(color_space="RGB", orient=9, pix_per_cell=8, cell_per_block
         file = open(save_file, "wb")
         pickle.dump(data, file)
         file.close()
+
+
+def load_features(use_smallset=False, use_subset=False, subset_size=1000):
+    if use_smallset:
+        not_car_images = glob.glob("non-vehicles_smallset/*/*.jpeg")
+        car_images = glob.glob("vehicles_smallset/*/*.jpeg")
+    else:
+        not_car_images = glob.glob("non-vehicles/*/*.png")
+        car_images = glob.glob("vehicles/*/*.png")
+    cars = []
+    notcars = []
+
+    for image in car_images:
+        cars.append(image)
+    for image in not_car_images:
+        notcars.append(image)
+
+    if use_subset:
+        if len(cars) > subset_size:
+            random_indexes = np.random.randint(0, len(cars), subset_size)
+            cars = np.array(cars)[random_indexes]
+        if len(notcars) > subset_size:
+            random_indexes = np.random.randint(0, len(notcars), subset_size)
+            notcars = np.array(notcars)[random_indexes]
+    print("len(cars)={}, len(notcars)={}".format(len(cars), len(notcars)))
+    return cars, notcars
 
 
 def load_svc(save_file="svc_pickle.p"):

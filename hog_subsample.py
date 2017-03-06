@@ -1,7 +1,9 @@
 import matplotlib
 
 matplotlib.use('TkAgg')
+import matplotlib.pyplot as plt
 from trainer import *
+from pipeline import *
 
 if __name__ == '__main__':
     svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins = load_svc()

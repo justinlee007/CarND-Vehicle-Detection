@@ -1,6 +1,9 @@
+import glob
+
 import matplotlib
 
 matplotlib.use("TkAgg")
+import matplotlib.pyplot as plt
 
 from detection import *
 
