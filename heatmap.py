@@ -1,11 +1,8 @@
 import matplotlib
 
 matplotlib.use("TkAgg")
-import matplotlib.image as mpimg
-import matplotlib.pyplot as plt
-import numpy as np
-import pickle
-import cv2
+
+from hog_subsample import *
 from scipy.ndimage.measurements import label
 
 
@@ -28,6 +25,7 @@ def apply_threshold(heatmap, threshold):
 
 def draw_labeled_bboxes(img, labels):
     # Iterate through all detected cars
+    bboxes = []
     for car_number in range(1, labels[1] + 1):
         # Find pixels with each car_number label value
         nonzero = (labels[0] == car_number).nonzero()
@@ -35,39 +33,44 @@ def draw_labeled_bboxes(img, labels):
         nonzeroy = np.array(nonzero[0])
         nonzerox = np.array(nonzero[1])
         # Define a bounding box based on min/max x and y
-        bbox = ((np.min(nonzerox), np.min(nonzeroy)), (np.max(nonzerox), np.max(nonzeroy)))
-        # Draw the box on the image
-        cv2.rectangle(img, bbox[0], bbox[1], (0, 0, 255), 6)
-    # Return the image
-    return img
+        bbox = (np.min(nonzerox), np.min(nonzeroy)), (np.max(nonzerox), np.max(nonzeroy))
+        bboxes.append(bbox)
+    # Draw the boxes on the image
+    return draw_boxes(img, bboxes, color=(0, 0, 1), thick=6)
 
 
 if __name__ == "__main__":
-    # Read in a pickle file with bboxes saved
-    # Each item in the "all_bboxes" list will contain a list of boxes for one of the images shown above
-    box_list = pickle.load(open("bbox_pickle.p", "rb"))
+    svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins = load_svc()
+    images = glob.glob("test_images/test*.jpg")
+    images.append("test_images/bbox-example-image.jpg")
+    for image_file in images:
+        image = mpimg.imread(image_file)
+        y = image.shape[0]
+        y_start = 400
+        y_stop = y - 64
+        scale = 1
 
-    # Read in image similar to one shown above
-    image = mpimg.imread("test_image.jpg")
-    heat = np.zeros_like(image[:, :, 0]).astype(np.float)
-    # Add heat to each box in box list
-    heat = add_heat(heat, box_list)
+        # Uncomment the following line if you extracted training data from .png images (scaled 0 to 1 by mpimg) and the
+        # image you are searching is a .jpg (scaled 0 to 255)
+        image = image.astype(np.float32) / 255
+        print("min={}, max={}".format(np.min(image), np.max(image)))
 
-    # Apply threshold to help remove false positives
-    heat = apply_threshold(heat, 1)
+        img_boxes, heatmap = find_cars(image, y_start, y_stop, scale, svc, X_scaler, orient, pix_per_cell,
+                                       cell_per_block, spatial_size, hist_bins)
 
-    # Visualize the heatmap when displaying
-    heatmap = np.clip(heat, 0, 255)
+        heatmap = apply_threshold(heatmap, 2)
 
-    # Find final boxes from heatmap using label function
-    labels = label(heatmap)
-    draw_img = draw_labeled_bboxes(np.copy(image), labels)
+        # heatmap = np.clip(heat, 0, 255)
 
-    fig = plt.figure()
-    plt.subplot(121)
-    plt.imshow(draw_img)
-    plt.title("Car Positions")
-    plt.subplot(122)
-    plt.imshow(heatmap, cmap="hot")
-    plt.title("Heat Map")
-    plt.show()
+        # Find final boxes from heatmap using label function
+        labels = label(heatmap)
+
+        draw_img = draw_labeled_bboxes(np.copy(image), labels)
+        fig = plt.figure()
+        plt.subplot(121)
+        plt.imshow(draw_img)
+        plt.title("Car Positions")
+        plt.subplot(122)
+        plt.imshow(heatmap, cmap="hot")
+        plt.title("Heat Map")
+        plt.show()
