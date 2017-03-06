@@ -1,34 +1,21 @@
-import glob
 import time
 
-import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import LinearSVC
 
-import norm_shuffle as feature
+from detection_functions import *
 
-not_car_images = glob.glob("non-vehicles_smallset/*/*.jpeg")
-car_images = glob.glob("vehicles_smallset/*/*.jpeg")
-cars = []
-notcars = []
+cars, notcars = load_features()
 
-print("not_car_images size={}, car_images size={}".format(len(not_car_images), len(car_images)))
-for image in not_car_images:
-    notcars.append(image)
-for image in car_images:
-    cars.append(image)
+# TODO play with these values to see how your classifier performs under different binning scenarios
+spatial_size = 16
+hist_bins = 16
 
-# TODO play with these values to see how your classifier
-# performs under different binning scenarios
-spatial = 40
-histbin = 72
-
-car_features = feature.extract_features(cars, cspace="RGB", spatial_size=(spatial, spatial), hist_bins=histbin,
-                                        hist_range=(0, 255))
-notcar_features = feature.extract_features(notcars, cspace="RGB", spatial_size=(spatial, spatial), hist_bins=histbin,
-                                           hist_range=(0, 255))
-
+car_features = extract_features(cars, color_space="RGB", spatial_size=(spatial_size, spatial_size), hist_bins=hist_bins,
+                                spatial_feat=True, hist_feat=True, hog_feat=False)
+notcar_features = extract_features(notcars, color_space="RGB", spatial_size=(spatial_size, spatial_size),
+                                   hist_bins=hist_bins, spatial_feat=True, hist_feat=True, hog_feat=False)
 # Create an array stack of feature vectors
 X = np.vstack([car_features, notcar_features]).astype(np.float64)
 # Fit a per-column scaler
@@ -43,7 +30,7 @@ y = np.hstack((np.ones(len(car_features)), np.zeros(len(notcar_features))))
 rand_state = np.random.randint(0, 100)
 X_train, X_test, y_train, y_test = train_test_split(scaled_X, y, test_size=0.2, random_state=rand_state)
 
-print("Using spatial binning of: {} and {} histogram bins".format(spatial, histbin))
+print("Using spatial binning of: {} and {} histogram bins".format(spatial_size, hist_bins))
 print("Feature vector length:\t{}".format(len(X_train[0])))
 # Use a linear SVC
 svc = LinearSVC()
@@ -61,3 +48,29 @@ print("My SVC predicts:\t\t{}".format(svc.predict(X_test[0:n_predict])))
 print("For these {} labels:\t{}".format(n_predict, y_test[0:n_predict]))
 t2 = time.time()
 print("Time to predict {} labels with SVC: {}s".format(n_predict, round(t2 - t, 5)))
+car_ind = np.random.randint(0, len(cars))
+# Plot an example of raw and scaled features
+fig = plt.figure(figsize=(12, 4))
+plt.subplot(131)
+plt.imshow(mpimg.imread(cars[car_ind]))
+plt.title("Original Image (car)")
+plt.subplot(132)
+plt.plot(X[car_ind])
+plt.title("Raw Features")
+plt.subplot(133)
+plt.plot(scaled_X[car_ind])
+plt.title("Normalized Features")
+plt.show()
+notcar_ind = np.random.randint(0, len(notcars))
+# Plot an example of raw and scaled features
+fig = plt.figure(figsize=(12, 4))
+plt.subplot(131)
+plt.imshow(mpimg.imread(notcars[notcar_ind]))
+plt.title("Original Image (not car)")
+plt.subplot(132)
+plt.plot(X[notcar_ind])
+plt.title("Raw Features")
+plt.subplot(133)
+plt.plot(scaled_X[notcar_ind])
+plt.title("Normalized Features")
+plt.show()

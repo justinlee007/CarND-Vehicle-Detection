@@ -1,46 +1,19 @@
 import matplotlib
 
 matplotlib.use('TkAgg')
-import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
-import glob
 
 from detection_functions import *
 
-
-# Define a function to extract features from a list of images
-# Have this function call bin_spatial() and color_hist()
-def extract_features(imgs, spatial_size=(32, 32), hist_bins=32):
-    # Create a list to append feature vectors to
-    features = []
-    # Iterate through the list of images
-    for file in imgs:
-        # Read in each one by one
-        feature_image = mpimg.imread(file)
-        # Apply bin_spatial() to get spatial color features
-        spatial_features = bin_spatial(feature_image, size=spatial_size)
-        # Apply color_hist() also with a color space option now
-        hist_features = color_hist(feature_image, nbins=hist_bins)
-        # Append the new feature vector to the features list
-        features.append(np.concatenate((spatial_features, hist_features)))
-    # Return list of feature vectors
-    return features
-
-
 if __name__ == "__main__":
-    not_car_images = glob.glob("non-vehicles/*/*.png")
-    car_images = glob.glob("vehicles/*/*.png")
-    cars = []
-    notcars = []
+    cars, notcars = load_features()
 
-    print("not_car_images size={}, car_images size={}".format(len(not_car_images), len(car_images)))
-    for image in not_car_images:
-        notcars.append(image)
-    for image in car_images:
-        cars.append(image)
-
-    car_features = extract_features(cars, spatial_size=(32, 32), hist_bins=32)
-    notcar_features = extract_features(notcars, spatial_size=(32, 32), hist_bins=32)
+    car_features = extract_features(cars, color_space="RGB", spatial_size=(32, 32), hist_bins=32, orient=9,
+                                    pix_per_cell=8, cell_per_block=2, hog_channel=0, spatial_feat=True, hist_feat=True,
+                                    hog_feat=False)
+    notcar_features = extract_features(notcars, color_space="RGB", spatial_size=(32, 32), hist_bins=32, orient=9,
+                                       pix_per_cell=8, cell_per_block=2, hog_channel=0, spatial_feat=True,
+                                       hist_feat=True, hog_feat=False)
 
     if len(car_features) > 0:
         # Create an array stack of feature vectors

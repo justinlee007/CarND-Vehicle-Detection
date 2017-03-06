@@ -1,5 +1,11 @@
+import glob
+
 import cv2
+import matplotlib
+
+matplotlib.use("TkAgg")
 import matplotlib.image as mpimg
+import matplotlib.pyplot as plt
 import numpy as np
 from skimage.feature import hog
 
@@ -161,6 +167,32 @@ def slide_window(img, x_start_stop=[None, None], y_start_stop=[None, None], xy_w
     return window_list
 
 
+# Define a function you will pass an image
+# and the list of windows to be searched (output of slide_windows())
+def search_windows(img, windows, clf, scaler, color_space="RGB", spatial_size=(32, 32), hist_bins=32, orient=9,
+                   pix_per_cell=8, cell_per_block=2, hog_channel=0, spatial_feat=True, hist_feat=True, hog_feat=True):
+    # 1) Create an empty list to receive positive detection windows
+    on_windows = []
+    # 2) Iterate over all windows in the list
+    for window in windows:
+        # 3) Extract the test window from original image
+        test_img = cv2.resize(img[window[0][1]:window[1][1], window[0][0]:window[1][0]], (64, 64))
+        # 4) Extract features for that window using single_img_features()
+        features = extract_feature(test_img, color_space=color_space, spatial_size=spatial_size, hist_bins=hist_bins,
+                                   orient=orient, pix_per_cell=pix_per_cell, cell_per_block=cell_per_block,
+                                   hog_channel=hog_channel, spatial_feat=spatial_feat, hist_feat=hist_feat,
+                                   hog_feat=hog_feat)
+        # 5) Scale extracted features to be fed to classifier
+        test_features = scaler.transform(np.array(features).reshape(1, -1))
+        # 6) Predict using your classifier
+        prediction = clf.predict(test_features)
+        # 7) If positive (prediction == 1) then save the window
+        if prediction == 1:
+            on_windows.append(window)
+    # 8) Return windows for positive detections
+    return on_windows
+
+
 # Define a function to draw bounding boxes
 def draw_boxes(img, bboxes, color=(0, 0, 255), thick=6):
     # Make a copy of the image
@@ -171,3 +203,35 @@ def draw_boxes(img, bboxes, color=(0, 0, 255), thick=6):
         cv2.rectangle(imcopy, bbox[0], bbox[1], color, thick)
     # Return the image copy with boxes drawn
     return imcopy
+
+
+def load_features(use_smallset=False):
+    if use_smallset:
+        not_car_images = glob.glob("non-vehicles_smallset/*/*.jpeg")
+        car_images = glob.glob("vehicles_smallset/*/*.jpeg")
+    else:
+        not_car_images = glob.glob("non-vehicles/*/*.png")
+        car_images = glob.glob("vehicles/*/*.png")
+    cars = []
+    notcars = []
+
+    for image in car_images:
+        cars.append(image)
+    for image in not_car_images:
+        notcars.append(image)
+    print("len(cars)={}, len(notcars)={}".format(len(cars), len(notcars)))
+    return cars, notcars
+
+
+# Define a function for plotting multiple images
+def visualize(fig, rows, cols, imgs, titles):
+    for i, img in enumerate(imgs):
+        plt.subplot(rows, cols, i + 1)
+        plt.title(i + 1)
+        img_dims = len(img.shape)
+        if img_dims < 3:
+            plt.imshow(img, cmap="hot")
+        else:
+            plt.imshow(img)
+        plt.title(titles[i])
+    plt.show()

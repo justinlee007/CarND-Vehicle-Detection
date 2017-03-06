@@ -2,8 +2,6 @@ import matplotlib
 
 matplotlib.use("TkAgg")
 
-import matplotlib.pyplot as plt
-import glob
 from detection_functions import *
 
 if __name__ == "__main__":

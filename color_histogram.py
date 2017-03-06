@@ -1,7 +1,6 @@
 import matplotlib
 
 matplotlib.use("TkAgg")
-import matplotlib.pyplot as plt
 from detection_functions import *
 
 if __name__ == "__main__":

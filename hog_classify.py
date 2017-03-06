@@ -1,70 +1,13 @@
-import glob
 import time
 
-import cv2
-import matplotlib.image as mpimg
-import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import LinearSVC
 
-import get_hog as hog
-
-
-# Define a function to extract features from a list of images
-# Have this function call bin_spatial() and color_hist()
-def extract_features(imgs, cspace="RGB", orient=9, pix_per_cell=8, cell_per_block=2, hog_channel=0):
-    # Create a list to append feature vectors to
-    features = []
-    # Iterate through the list of images
-    for file in imgs:
-        # Read in each one by one
-        image = mpimg.imread(file)
-        # apply color conversion if other than "RGB"
-        if cspace != "RGB":
-            if cspace == "HSV":
-                feature_image = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
-            elif cspace == "LUV":
-                feature_image = cv2.cvtColor(image, cv2.COLOR_RGB2LUV)
-            elif cspace == "HLS":
-                feature_image = cv2.cvtColor(image, cv2.COLOR_RGB2HLS)
-            elif cspace == "YUV":
-                feature_image = cv2.cvtColor(image, cv2.COLOR_RGB2YUV)
-            elif cspace == "YCrCb":
-                feature_image = cv2.cvtColor(image, cv2.COLOR_RGB2YCrCb)
-        else:
-            feature_image = np.copy(image)
-
-        # Call get_hog_features() with vis=False, feature_vec=True
-        if hog_channel == "ALL":
-            hog_features = []
-            for channel in range(feature_image.shape[2]):
-                hog_features.append(
-                    hog.get_hog_features(feature_image[:, :, channel], orient, pix_per_cell, cell_per_block, vis=False,
-                                         feature_vec=True))
-            hog_features = np.ravel(hog_features)
-        else:
-            hog_features = hog.get_hog_features(feature_image[:, :, hog_channel], orient, pix_per_cell, cell_per_block,
-                                                vis=False, feature_vec=True)
-        # Append the new feature vector to the features list
-        features.append(hog_features)
-    # Return list of feature vectors
-    return features
-
+from detection_functions import *
 
 if __name__ == "__main__":
-    not_car_images = glob.glob("non-vehicles/*/*.png")
-    car_images = glob.glob("vehicles/*/*.png")
-    cars = []
-    notcars = []
-
-    print("not_car_images size={}, car_images size={}".format(len(not_car_images), len(car_images)))
-    for image in car_images:
-        cars.append(image)
-    for image in not_car_images:
-        if len(notcars) > len(cars):
-            break;
-        notcars.append(image)
+    cars, notcars = load_features()
 
     ### TODO: Tweak these parameters and see how the results change.
     colorspace = "YUV"  # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
@@ -74,12 +17,12 @@ if __name__ == "__main__":
     hog_channel = "ALL"  # Can be 0, 1, 2, or "ALL"
 
     t = time.time()
-    car_features = extract_features(cars, cspace=colorspace, orient=orient,
-                                    pix_per_cell=pix_per_cell, cell_per_block=cell_per_block,
-                                    hog_channel=hog_channel)
-    notcar_features = extract_features(notcars, cspace=colorspace, orient=orient,
-                                       pix_per_cell=pix_per_cell, cell_per_block=cell_per_block,
-                                       hog_channel=hog_channel)
+    car_features = extract_features(cars, color_space=colorspace, orient=orient, pix_per_cell=pix_per_cell,
+                                    cell_per_block=cell_per_block, hog_channel=hog_channel, spatial_feat=False,
+                                    hist_feat=False, hog_feat=True)
+    notcar_features = extract_features(notcars, color_space=colorspace, orient=orient, pix_per_cell=pix_per_cell,
+                                       cell_per_block=cell_per_block, hog_channel=hog_channel, spatial_feat=False,
+                                       hist_feat=False, hog_feat=True)
     t2 = time.time()
     print(round(t2 - t, 2), "Seconds to extract HOG features...")
     # Create an array stack of feature vectors

@@ -2,10 +2,7 @@ import matplotlib
 
 matplotlib.use("TkAgg")
 
-import matplotlib.image as mpimg
-import matplotlib.pyplot as plt
-import numpy as np
-import glob
+from detection_functions import *
 
 
 # Define a function to return some characteristics of the dataset
@@ -29,18 +26,7 @@ def data_look(car_list, notcar_list):
 
 
 if __name__ == "__main__":
-    not_car_images = glob.glob("non-vehicles_smallset/*/*.jpeg")
-    car_images = glob.glob("vehicles_smallset/*/*.jpeg")
-    # not_car_images = glob.glob("non-vehicles/*/*.png")
-    # car_images = glob.glob("vehicles/*/*.png")
-    cars = []
-    notcars = []
-
-    print("not_car_images size={}, car_images size={}".format(len(not_car_images), len(car_images)))
-    for image in not_car_images:
-        notcars.append(image)
-    for image in car_images:
-        cars.append(image)
+    cars, notcars = load_features()
     data_info = data_look(cars, notcars)
 
     print("Your function returned a count of",
