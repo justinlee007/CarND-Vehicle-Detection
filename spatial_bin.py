@@ -2,7 +2,7 @@ import matplotlib
 
 matplotlib.use("TkAgg")
 
-from detection_functions import *
+from detection import *
 
 if __name__ == "__main__":
     images = glob.glob("test_images/cutout*.jpg")

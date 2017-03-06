@@ -2,7 +2,7 @@ import matplotlib
 
 matplotlib.use("TkAgg")
 
-from detection_functions import *
+from detection import *
 
 if __name__ == "__main__":
     not_car_images = glob.glob("non-vehicles/*/*.png")

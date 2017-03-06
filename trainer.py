@@ -5,7 +5,7 @@ import matplotlib
 matplotlib.use("TkAgg")
 from sklearn.svm import LinearSVC
 from sklearn.preprocessing import StandardScaler
-from detection_functions import *
+from detection import *
 
 from sklearn.model_selection import train_test_split
 

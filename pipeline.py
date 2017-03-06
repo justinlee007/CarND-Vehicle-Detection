@@ -1,4 +1,4 @@
-from detection_functions import *
+from detection import *
 from hog_subsample import *
 
 def process_image(img):

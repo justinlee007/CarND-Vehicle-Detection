@@ -1,7 +1,7 @@
 import matplotlib
 
 matplotlib.use("TkAgg")
-from detection_functions import *
+from detection import *
 
 if __name__ == "__main__":
     image = mpimg.imread("test_images/cutout1.jpg")

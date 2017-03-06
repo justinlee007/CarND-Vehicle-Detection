@@ -1,7 +1,7 @@
 import matplotlib
 
 matplotlib.use("TkAgg")
-from detection_functions import *
+from detection import *
 import glob
 
 
