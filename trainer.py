@@ -88,7 +88,7 @@ def load_features(use_smallset=False, use_subset=False, subset_size=1000):
 
 
 def load_svc(save_file="svc_pickle.p"):
-    print("Loading svc from:\t\t{}".format(save_file))
+    # print("Loading svc from:\t\t{}".format(save_file))
     dist_pickle = pickle.load(open("svc_pickle.p", "rb"))
     svc = dist_pickle["svc"]
     X_scaler = dist_pickle["scaler"]
