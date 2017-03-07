@@ -1,3 +1,4 @@
+import argparse
 import glob
 import pickle
 
@@ -101,6 +102,11 @@ def load_svc(save_file="svc_pickle.p"):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Utility for training and storing SVC")
+    parser.add_argument("-save", action="store_true", help="Pickle SVC, Scalar and training parameters")
+    results = parser.parse_args()
+    save_svc = bool(results.save)
+
     color_space = "YCrCb"  # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
     orient = 9  # HOG orientations
     pix_per_cell = 8  # HOG pixels per cell
@@ -111,6 +117,9 @@ if __name__ == "__main__":
     spatial_feat = True  # Spatial features on or off
     hist_feat = True  # Histogram features on or off
     hog_feat = True  # HOG features on or off
-
+    if save_svc:
+        save_file = "svc_pickle.p"
+    else:
+        save_file = None
     train_classifier(color_space, orient, pix_per_cell, cell_per_block, hog_channel, spatial_size, hist_bins,
-                     spatial_feat, hist_feat, hog_feat, save_file="svc_pickle.p")
+                     spatial_feat, hist_feat, hog_feat, save_file=save_file)
