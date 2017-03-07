@@ -59,10 +59,23 @@ def color_hist(img, nbins=32, vis=False):
         return hist_features
 
 
-# Define a function to extract features from a list of images
-# Have this function call bin_spatial() and color_hist()
 def extract_features(imgs, color_space="RGB", spatial_size=(32, 32), hist_bins=32, orient=9, pix_per_cell=8,
                      cell_per_block=2, hog_channel=0, spatial_feat=True, hist_feat=True, hog_feat=True):
+    """
+    Extracts features from a list of images.  This calls extract_feature() internally.
+    :param imgs:
+    :param color_space:
+    :param spatial_size:
+    :param hist_bins:
+    :param orient:
+    :param pix_per_cell:
+    :param cell_per_block:
+    :param hog_channel:
+    :param spatial_feat:
+    :param hist_feat:
+    :param hog_feat:
+    :return:
+    """
     # Create a list to append feature vectors to
     features = []
     # Iterate through the list of images
@@ -76,10 +89,24 @@ def extract_features(imgs, color_space="RGB", spatial_size=(32, 32), hist_bins=3
     return features
 
 
-# Define a function to extract features from a single image window
-# This function is very similar to extract_features() just for a single image rather than list of images
 def extract_feature(img, color_space="RGB", spatial_size=(32, 32), hist_bins=32, orient=9, pix_per_cell=8,
                     cell_per_block=2, hog_channel=0, spatial_feat=True, hist_feat=True, hog_feat=True):
+    """
+    Extracts features from a single image window.  Calls bin_spatial(), color_hist() and get_hog_features().
+    This function is very similar to extract_features() just for a single image rather than list of images.
+    :param img:
+    :param color_space:
+    :param spatial_size:
+    :param hist_bins:
+    :param orient:
+    :param pix_per_cell:
+    :param cell_per_block:
+    :param hog_channel:
+    :param spatial_feat:
+    :param hist_feat:
+    :param hog_feat:
+    :return:
+    """
     # 1) Define an empty list to receive features
     img_features = []
     # 2) Apply color conversion if other than "RGB"
@@ -218,3 +245,38 @@ def add_heat(heatmap, bbox_list):
 
     # Return updated heatmap
     return heatmap  # Iterate through list of bboxes
+
+
+# Define a function to draw bounding boxes
+def draw_boxes(img, bboxes, color=(0, 0, 1), thick=6):
+    # Make a copy of the image
+    imcopy = np.copy(img)
+    # Iterate through the bounding boxes
+    for bbox in bboxes:
+        # Draw a rectangle given bbox coordinates
+        cv2.rectangle(imcopy, bbox[0], bbox[1], color, thick)
+    # Return the image copy with boxes drawn
+    return imcopy
+
+
+def draw_labeled_bboxes(img, labels, color=(0, 0, 1), thick=6):
+    # Iterate through all detected cars
+    bboxes = []
+    for car_number in range(1, labels[1] + 1):
+        # Find pixels with each car_number label value
+        nonzero = (labels[0] == car_number).nonzero()
+        # Identify x and y values of those pixels
+        nonzeroy = np.array(nonzero[0])
+        nonzerox = np.array(nonzero[1])
+        # Define a bounding box based on min/max x and y
+        bbox = (np.min(nonzerox), np.min(nonzeroy)), (np.max(nonzerox), np.max(nonzeroy))
+        bboxes.append(bbox)
+        # Draw the boxes on the image
+    return draw_boxes(img, bboxes, color, thick)
+
+
+def apply_threshold(heatmap, threshold):
+    # Zero out pixels below the threshold
+    heatmap[heatmap <= threshold] = 0
+    # Return thresholded map
+    return heatmap

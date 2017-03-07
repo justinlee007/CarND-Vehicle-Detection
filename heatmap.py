@@ -4,7 +4,6 @@ matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 
 from trainer import *
-from pipeline import *
 from scipy.ndimage.measurements import label
 
 if __name__ == "__main__":
@@ -16,7 +15,7 @@ if __name__ == "__main__":
         y = image.shape[0]
         y_start = 400
         y_stop = y - 64
-        scale = 1.5
+        scale = 1
 
         # Uncomment the following line if you extracted training data from .png images (scaled 0 to 1 by mpimg) and the
         # image you are searching is a .jpg (scaled 0 to 255)
