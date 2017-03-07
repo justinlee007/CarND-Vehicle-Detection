@@ -204,7 +204,7 @@ def find_cars(img, y_start, y_stop, scale, svc, X_scaler, orient, pix_per_cell, 
                 win_draw = np.int(window * scale)
                 bboxes = (xbox_left, (ytop_draw + y_start)), ((xbox_left + win_draw), (ytop_draw + win_draw + y_start))
                 img_boxes.append(bboxes)
-                heatmap[ytop_draw + y_start:ytop_draw + win_draw + y_start, xbox_left: xbox_left + win_draw] += 1
+                # heatmap[ytop_draw + y_start:ytop_draw + win_draw + y_start, xbox_left: xbox_left + win_draw] += 1
     add_heat(heatmap, img_boxes)
     # print("Runtime={:.2f}s, total windows={}".format((time.time() - t), count))
     return img_boxes, heatmap
