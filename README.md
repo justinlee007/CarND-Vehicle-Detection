@@ -22,7 +22,7 @@ The images for classification are in `vehicles` and `non_vehicles` symlink.  The
 [image5]: ./examples/bboxes_and_heat.png
 [image6]: ./examples/labels_map.png
 [image7]: ./examples/output_bboxes.png
-[video1]: ./vehicle_detection.mp4
+[video1]: https://youtu.be/qrLMPmFXFF8
 
 # [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
 
