@@ -117,9 +117,6 @@ if __name__ == "__main__":
     spatial_feat = True  # Spatial features on or off
     hist_feat = True  # Histogram features on or off
     hog_feat = True  # HOG features on or off
-    if save_svc:
-        save_file = "svc_pickle.p"
-    else:
-        save_file = None
+    save_file = "svc_pickle.p" if save_svc else None
     train_classifier(color_space, orient, pix_per_cell, cell_per_block, hog_channel, spatial_size, hist_bins,
                      spatial_feat, hist_feat, hog_feat, save_file=save_file)
