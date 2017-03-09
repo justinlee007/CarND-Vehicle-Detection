@@ -44,10 +44,10 @@ optional arguments:
 
 The methods used for feature extraction are in `detection.py`.  The four steps I use for feature extractions are:
 
-1) Color transform
-2) Spatial binning of image channels 
-3) Color histogram of image channels
-4) Image [HOG](https://en.wikipedia.org/wiki/Histogram_of_oriented_gradients)
+1. Color transform
+2. Spatial binning of image channels 
+3. Color histogram of image channels
+4. Image [HOG](https://en.wikipedia.org/wiki/Histogram_of_oriented_gradients)
 
 #### Color Transform
 
@@ -112,19 +112,19 @@ optional arguments:
 ###2. Explain how you settled on your final choice of HOG parameters.
 
 The bin spatial parameters are as follows:
-1) spatial size: a resize option that will (most often) downsample the channel before raveling
+1. spatial size: a resize option that will (most often) downsample the channel before raveling
 
 Earlier versions of bin spatial method included a color transform, but that was refactored out into `detection.extract_feature`.  For spatial size, I had the most success with spatial binning size of 40 or 32.  I stuck with 32 for my submission because 64 (the training image size) divides evenly into it.  
 
 The color histogram parameters are as follows:
-1) image bins: the number of equal-width bins in the given range
+1. image bins: the number of equal-width bins in the given range
 
 I had success classifing images with image bins of 72 or 32.  I stuck with 32 for my submission because 64 (the training image size) divides evenly into it.
 
 The HOG parameters are as follows:
-1) orient
-2) pixels per cell
-3) cell per block
+1. orient
+2. pixels per cell
+3. cell per block
 
 I tried various combinations of parameters and [TODO]
 
