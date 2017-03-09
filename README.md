@@ -17,8 +17,8 @@ The images for classification are in `vehicles` and `non_vehicles` symlink.  The
 [//]: # (Image References)
 [image1]: ./output_images/car_not_car.png
 [image2]: ./output_images/spatial_bin_cutout6.png
-[image3]: ./examples/sliding_windows.jpg
-[image4]: ./examples/sliding_window.jpg
+[image3]: ./output_images/color_histogram_cutout2.png
+[image4]: ./output_images/hog_features_31.png
 [image5]: ./examples/bboxes_and_heat.png
 [image6]: ./examples/labels_map.png
 [image7]: ./examples/output_bboxes.png
@@ -40,7 +40,7 @@ optional arguments:
   -show       Show first car/not-car pair
   -save       Save car/not-car pair image to disk
 ```
-![alt text][image1]
+![][image1]
 
 The methods used for feature extraction are in `detection.py`.  The four steps I use for feature extractions are:
 1) Color transform
@@ -67,42 +67,65 @@ optional arguments:
   -show       Show car image with spatially binned plot
   -save       Save example spatial bin to disk
 ```
-![alt text][image2]
+![][image2]
 #### Color Histogram
 
-The `detection.color_hist` method creates a stack of histograms of each image channel as a vector.  The parameters for color histogram are 
+The `detection.color_hist` method creates a stack of histograms of each image channel as a vector.  The parameters for color histogram are
+ 
+The `color_histogram` utility visualizes a sampe image with it's corresponding historam plot per channel:
+
+```
+usage: color_histogram.py [-h] [-show] [-save]
+
+Utility for visualizing color histogram feature extraction
+
+optional arguments:
+  -h, --help  show this help message and exit
+  -show       Show each channel histogram
+  -save       Save histogram visualization
+```
+![][image3]
+
 #### HOG
 Next, I use a color histogram feature vector is extracted
 
-The code for this step is contained in `detection.py` where the method `get_hog_features` will call `skimage.feature.hog` to extract features.  
+The code for this step is contained in `detection.get_hog_features` method which calls `skimage.feature.hog` to extract features.  
+
+I explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
 
 
+The `get_hog` utility visualizes a sample car image with it's corresponding HOG feature plot:
+```
+usage: get_hog.py [-h] [-show] [-save]
 
-I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
+Utility for visualizing HOG feature extraction
 
-Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
-
-
-![alt text][image2]
+optional arguments:
+  -h, --help  show this help message and exit
+  -show       Visualize HOG image
+  -save       Save HOG image
+```
+![][image4]
+#####This example HOG feature plot uses the `YCrCb` color space with parameters of `orient=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`
 
 ###2. Explain how you settled on your final choice of HOG parameters.
 
 The bin spatial parameters are as follows:
-1) color space:
-2) spatial size: 
+1) spatial size: a resize option that will (most often) downsample the channel before raveling
+
+Earlier versions of bin spatial method included a color transform, but that was refactored out into `detection.extract_feature`.  For spatial size, I had the most success with spatial binning size of 40 or 32.  I stuck with 32 for my submission because 64 (the training image size) divides evenly into it.  
 
 The color histogram parameters are as follows:
-2) image bins: the number of equal-width bins in the given range
+1) image bins: the number of equal-width bins in the given range
+
+I had success classifing images with image bins of 72 or 32.  I stuck with 32 for my submission because 64 (the training image size) divides evenly into it.
 
 The HOG parameters are as follows:
 1) orient
-2) pixels_per_cell
-3) cell_per_block
+2) pixels per cell
+3) cell per block
 
-spatial = 40
-histbin = 72
-
-I tried various combinations of parameters and...
+I tried various combinations of parameters and [TODO]
 
 ###3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
@@ -134,13 +157,9 @@ Process finished with exit code 0
 
 I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
 
-![alt text][image3]
-
 ###2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
 Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
-
-![alt text][image4]
 
 ## Video Implementation
 
