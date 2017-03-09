@@ -71,7 +71,7 @@ optional arguments:
 ![][image2]
 #### Color Histogram
 
-The `detection.color_hist` method creates a stack of histograms of each image channel as a vector.  The parameters for color histogram are
+The `detection.color_hist` method creates a stack of histograms of each image channel as a vector.  The parameters for color histogram include an image bin value for the number of equal-width bins in the given range. 
  
 The `color_histogram` utility visualizes a sampe image with it's corresponding historam plot per channel:
 
@@ -112,16 +112,19 @@ optional arguments:
 ###2. Explain how you settled on your final choice of HOG parameters.
 
 The bin spatial parameters are as follows:
+
 1. spatial size: a resize option that will (most often) downsample the channel before raveling
 
 Earlier versions of bin spatial method included a color transform, but that was refactored out into `detection.extract_feature`.  For spatial size, I had the most success with spatial binning size of 40 or 32.  I stuck with 32 for my submission because 64 (the training image size) divides evenly into it.  
 
 The color histogram parameters are as follows:
+
 1. image bins: the number of equal-width bins in the given range
 
 I had success classifing images with image bins of 72 or 32.  I stuck with 32 for my submission because 64 (the training image size) divides evenly into it.
 
 The HOG parameters are as follows:
+
 1. orient
 2. pixels per cell
 3. cell per block
