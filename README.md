@@ -29,11 +29,13 @@ The images for classification are in `vehicles` and `non_vehicles` symlink.  The
 ##Histogram of Oriented Gradients (HOG)
 ###1. Explain how (and identify where in your code) you extracted HOG features from the training images.
 
-The code for this step is contained in `detection.py` (or in lines # through # of the file called `some_file.py`).  
-
-I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
+I started by reading in all the `vehicle` and `non-vehicle` images.  This code is in the `trainer.load_features` method.  The file `car_notcar` is an example utility that loads the images and displays a sample one:
 
 ![alt text][image1]
+
+The code for this step is contained in `detection.py` where the method `get_hog_features` will call `skimage.feature.hog` to extract features.  
+
+
 
 I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
 
@@ -43,6 +45,21 @@ Here is an example using the `YCrCb` color space and HOG parameters of `orientat
 ![alt text][image2]
 
 ###2. Explain how you settled on your final choice of HOG parameters.
+
+The bin spatial parameters are as follows:
+1) color space:
+2) spatial size: 
+
+The color histogram parameters are as follows:
+2) image bins: the number of equal-width bins in the given range
+
+The HOG parameters are as follows:
+1) orient
+2) pixels_per_cell
+3) cell_per_block
+
+spatial = 40
+histbin = 72
 
 I tried various combinations of parameters and...
 
