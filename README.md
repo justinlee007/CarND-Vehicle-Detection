@@ -43,6 +43,7 @@ optional arguments:
 ![][image1]
 
 The methods used for feature extraction are in `detection.py`.  The four steps I use for feature extractions are:
+
 1) Color transform
 2) Spatial binning of image channels 
 3) Color histogram of image channels
