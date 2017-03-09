@@ -15,7 +15,7 @@ The goals / steps of this project are the following:
 The images for classification are in `vehicles` and `non_vehicles` symlink.  The images in `test_images` are used in testing the pipeline on single frames.  Examples of the output from each stage of the pipeline are the `ouput_images` folder.  The video `vehicle_detection.mp4` is target video for the lane-finding pipeline.  Each rubric step will be documented with output images and usage.
 
 [//]: # (Image References)
-[image1]: ./examples/car_not_car.png
+[image1]: ./output_images/car_not_car.png
 [image2]: ./examples/HOG_example.jpg
 [image3]: ./examples/sliding_windows.jpg
 [image4]: ./examples/sliding_window.jpg
@@ -29,8 +29,17 @@ The images for classification are in `vehicles` and `non_vehicles` symlink.  The
 ##Histogram of Oriented Gradients (HOG)
 ###1. Explain how (and identify where in your code) you extracted HOG features from the training images.
 
-I started by reading in all the `vehicle` and `non-vehicle` images.  This code is in the `trainer.load_features` method.  The file `car_notcar` is an example utility that loads the images and displays a sample one:
+I started by reading in all the `vehicle` and `non-vehicle` images.  This code is in the `trainer.load_features` method.  The file `car_notcar` is a utility that loads the images and displays a sample one:
+```
+usage: car_notcar.py [-h] [-show] [-save]
 
+Utility for visualizing car/not-car pair
+
+optional arguments:
+  -h, --help  show this help message and exit
+  -show       Show first car/not-car pair
+  -save       Save car/not-car pair image to disk
+```
 ![alt text][image1]
 
 The code for this step is contained in `detection.py` where the method `get_hog_features` will call `skimage.feature.hog` to extract features.  

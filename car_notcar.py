@@ -28,6 +28,12 @@ def data_look(car_list, notcar_list):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Utility for visualizing car/not-car pair")
+    parser.add_argument("-show", action="store_true", help="Show first car/not-car pair")
+    parser.add_argument("-save", action="store_true", help="Save car/not-car pair image to disk")
+    results = parser.parse_args()
+    show = bool(results.show)
+    save = bool(results.save)
     cars, notcars = load_features()
     data_info = data_look(cars, notcars)
 
@@ -45,11 +51,14 @@ if __name__ == "__main__":
     notcar_image = mpimg.imread(notcars[notcar_ind])
 
     # Plot the examples
-    fig = plt.figure()
-    plt.subplot(121)
-    plt.imshow(car_image)
-    plt.title("Example Car Image")
-    plt.subplot(122)
-    plt.imshow(notcar_image)
-    plt.title("Example Not-car Image")
-    plt.show()
+    f, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 7))
+    ax1.imshow(car_image)
+    ax1.set_title("Example Car Image", fontsize=24)
+    ax2.imshow(notcar_image)
+    ax2.set_title("Example Not-car Image", fontsize=24)
+    if show:
+        plt.show()
+    if save:
+        save_file_name = "car_not_car.png"
+        save_location = "./output_images/{}".format(save_file_name)
+        f.savefig(save_location, bbox_inches="tight")
