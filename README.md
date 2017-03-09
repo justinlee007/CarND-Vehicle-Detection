@@ -16,7 +16,7 @@ The images for classification are in `vehicles` and `non_vehicles` symlink.  The
 
 [//]: # (Image References)
 [image1]: ./output_images/car_not_car.png
-[image2]: ./examples/HOG_example.jpg
+[image2]: ./output_images/spatial_bin_cutout6.png
 [image3]: ./examples/sliding_windows.jpg
 [image4]: ./examples/sliding_window.jpg
 [image5]: ./examples/bboxes_and_heat.png
@@ -26,8 +26,8 @@ The images for classification are in `vehicles` and `non_vehicles` symlink.  The
 
 # [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
 
-##Histogram of Oriented Gradients (HOG)
-###1. Explain how (and identify where in your code) you extracted HOG features from the training images.
+##Feature Extraction
+###1. Explain how (and identify where in your code) you extracted features from the training images.
 
 I started by reading in all the `vehicle` and `non-vehicle` images.  This code is in the `trainer.load_features` method.  The file `car_notcar` is a utility that loads the images and displays a sample one:
 ```
@@ -41,6 +41,38 @@ optional arguments:
   -save       Save car/not-car pair image to disk
 ```
 ![alt text][image1]
+
+The methods used for feature extraction are in `detection.py`.  The four steps I use for feature extractions are:
+1) Color transform
+2) Spatial binning of image channels 
+3) Color histogram of image channels
+4) Image [HOG](https://en.wikipedia.org/wiki/Histogram_of_oriented_gradients)
+
+#### Color Transform
+
+The first step for feature extraction is color transform.  I played with all the color variants discussed in the lecture `(RGB, HSV, LUV, HLS, YUV and YCrCb)`.  The best color space in terms of higher test accuracy in my experience was `YUV` and `YCrCb`.  I think this is because the `Y` channel in both color spaces produces a grayscale-like image that makes it easier to pick up edges.  The difference between `YUV` and `YCrCb` is marginal - mostly related to exact formulas. 
+
+#### Spatial Binning
+
+The `detection.bin_spatial` method creates a stack of each channel of the image as a vector.  The parameter for spatial binning is a resize option that will (most often) downsample the channel before raveling and adding to `hstack`.  I had the most success with spatial binning size of 40 or 32.  
+
+The `spatial_bin` utility visualizes a sample image and it's corresponding spatially-binned feature plot:
+```
+usage: spatial_bin.py [-h] [-show] [-save]
+
+Utility for visualizing spatial bin feature vector
+
+optional arguments:
+  -h, --help  show this help message and exit
+  -show       Show car image with spatially binned plot
+  -save       Save example spatial bin to disk
+```
+![alt text][image2]
+#### Color Histogram
+
+The `detection.color_hist` method creates a stack of histograms of each image channel as a vector.  The parameters for color histogram are 
+#### HOG
+Next, I use a color histogram feature vector is extracted
 
 The code for this step is contained in `detection.py` where the method `get_hog_features` will call `skimage.feature.hog` to extract features.  
 
