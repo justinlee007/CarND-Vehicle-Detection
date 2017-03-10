@@ -175,7 +175,7 @@ Process finished with exit code 0
 
 ###1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
-I implemented both sliding multi-scale window search and a HOG sub-sampling window search.  My submission includes only the HOG sub-sampling search because it performed much faster and lowered training time drastically.
+I implemented both sliding multi-scale window search and a HOG sub-sampling window search.  My submission includes only the HOG sub-sampling search because it performed much faster and video processing time drastically.
 
 ####Multi-window sliding search
 For the window search, the following parameters are used:
