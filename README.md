@@ -91,9 +91,7 @@ optional arguments:
 
 #### HOG
 
-The code for this step is contained in `detection.get_hog_features` method which calls `skimage.feature.hog` to extract features.  
-
-I explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
+The code for this step is contained in `detection.get_hog_features` method which calls `skimage.feature.hog` to extract features.  I explored different color spaces and different `skimage.hog` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).
 
 The `get_hog` utility visualizes a sample car image with it's corresponding HOG feature plot:
 ```
@@ -265,5 +263,5 @@ Finally, I created `VehicleDetector` class to load the SVC from disk only once d
 
 ###1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+  
 
