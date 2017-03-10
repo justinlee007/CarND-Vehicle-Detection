@@ -12,7 +12,7 @@ The goals / steps of this project are the following:
 * Run your pipeline on a video stream (start with the test_video.mp4 and later implement on full project_video.mp4) and create a heat map of recurring detections frame by frame to reject outliers and follow detected vehicles.
 * Estimate a bounding box for vehicles detected.
 
-The images for classification are in `vehicles` and `non_vehicles` symlink.  The images in `test_images` are used in testing the pipeline on single frames.  Examples of the output from each stage of the pipeline are the `ouput_images` folder.  The video `vehicle_detection.mp4` is target video for the lane-finding pipeline.  Each rubric step will be documented with output images and usage.
+The images for classification are in `vehicles` and `non_vehicles` symlink.  Because the symlinks point to a location outside the repository, the mechanism for training the classifier cannot be used unless the images are downloaded from the class project site.  The images in `test_images` are used in testing the pipeline on single frames.  Examples of the output from each stage of the pipeline are the `ouput_images` folder.  The video `vehicle_detection.mp4` is target video for the lane-finding pipeline.  Each rubric step will be documented with output images and usage.
 
 [//]: # (Image References)
 [image1]: ./output_images/car_not_car.png
