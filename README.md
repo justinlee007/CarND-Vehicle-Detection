@@ -73,7 +73,7 @@ optional arguments:
 
 The `detection.color_hist` method creates a stack of histograms of each image channel as a vector.  The parameters for color histogram include an image bin value for the number of equal-width bins in the given range. 
  
-The `color_histogram` utility visualizes a sampe image with it's corresponding historam plot per channel:
+The `color_histogram` utility visualizes a sample image with it's corresponding historam plot per channel:
 
 ```
 usage: color_histogram.py [-h] [-show] [-save]
@@ -88,12 +88,10 @@ optional arguments:
 ![][image3]
 
 #### HOG
-Next, I use a color histogram feature vector is extracted
 
 The code for this step is contained in `detection.get_hog_features` method which calls `skimage.feature.hog` to extract features.  
 
 I explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
-
 
 The `get_hog` utility visualizes a sample car image with it's corresponding HOG feature plot:
 ```
@@ -121,15 +119,21 @@ The color histogram parameters are as follows:
 
 1. image bins: the number of equal-width bins in the given range
 
-I had success classifing images with image bins of 72 or 32.  I stuck with 32 for my submission because 64 (the training image size) divides evenly into it.
+I had success classifying images with image bins of 72 or 32.  I stuck with 32 for my submission because 64 (the training image size) divides evenly into it.
 
 The HOG parameters are as follows:
 
-1. orient
-2. pixels per cell
-3. cell per block
+1. orient: the number of orientation bins
+2. pixels per cell: the size (in pixels) of a cell as tuple (int, int) 
+3. cell per block: the number of cells in each block as a tuple (int, int) 
 
-I tried various combinations of parameters and [TODO]
+I tried various combinations of parameters and had some success with parameters: 
+
+`(orient = 9, pix_per_cell = (16, 16), cell_per_block = (2, 2))` 
+
+However, I wanted to use the subsample feature as a sliding window mechanism later in the project so I decreased the pix_per_cell to account for this.  My project submission uses: 
+
+`(orient = 9, pix_per_cell = (8, 8), cell_per_block = (2, 2))`
 
 ###3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
