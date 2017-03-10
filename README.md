@@ -51,7 +51,9 @@ The methods used for feature extraction are in `detection.py`.  The four steps I
 
 #### Color Transform
 
-The first step for feature extraction is color transform.  I played with all the color variants discussed in the lecture `(RGB, HSV, LUV, HLS, YUV and YCrCb)`.  The best color space in terms of higher test accuracy in my experience was `YUV` and `YCrCb`.  I think this is because the `Y` channel in both color spaces produces a grayscale-like image that makes it easier to pick up edges.  The difference between `YUV` and `YCrCb` is marginal - mostly related to exact formulas. 
+The first step for feature extraction is color transform.  I played with all the color variants discussed in the lecture `(RGB, HSV, LUV, HLS, YUV and YCrCb)`.  The best color space in terms of higher test accuracy in my experience was `YUV` and `YCrCb`.  I think this is because the `Y` channel in both color spaces produces a grayscale-like image that makes it easier to pick up edges.  The difference between `YUV` and `YCrCb` is marginal - mostly related to exact formulas.
+ 
+The color conversion mechanism when training the model is contained in `detection.extract_features`.  The method used to convert colors during video processing is `detection.convert_color`.
 
 #### Spatial Binning
 
@@ -175,7 +177,35 @@ Process finished with exit code 0
 
 ###1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
-I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
+I implemented both sliding multi-scale window search and a HOG sub-sampling window search.  My submission includes only the HOG sub-sampling search because it performed much faster and lowered training time drastically.
+
+#### Multi-window sliding search
+For the window search, the following parameters are used:
+
+1. size: a square search window size
+2. y-start: starting pixel location on the y-axis (used to avoid searching the sky)
+3. y-stop: stop pixel location on the y-axes (used to avoid searching the hood)
+4. overlap: percentange of overlap between the search windows
+
+In my testing for the multi-scale window search, I used the following scales and windowing scheme:
+
+| size | y-start | y-stop | overlap |
+| :---: | :---: | :---: | :---: |
+| (64, 64) | 400 | y - 128 | 0.5 |
+| (128, 128) | 400 | y - 64 | 0.5 |
+| (256, 256) | 336 | y | 0.5 |
+
+My tests for the multi-scale window search was satisfactory for the above parameters, but performed slowly.  
+
+#### HOG sub-sampling search
+For HOG sub-sampling, the window size is fixed at (64, 64) and the sub-sampling is performed at scales (or multipliers) of the base window size.  The following parameters were used:
+
+1. y-start: starting pixel location on the y-axis (used to avoid searching the sky)
+2. y-stop: stop pixel location on the y-axes (used to avoid searching the hood)
+3. scale: the multiplier for the base (64, 64) window size
+
+I tested scales of 1, 1.5 and 2.  I also tested running the HOG sub-sampler multiple times at different scales.  I fould that the increase in vehicle detection and tracking was negligible for the extra scaling runs so my submission only uses scale of 1.5, y-start of 400 and y-stop of (y - 64)
+
 
 ###2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
