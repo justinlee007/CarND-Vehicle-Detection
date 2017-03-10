@@ -263,5 +263,22 @@ Finally, I created `VehicleDetector` class to load the SVC from disk only once d
 
 ###1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-  
+####Project Improvements
+I didn't complete the challenge of combining the advanced lane-finding with the vehicle detection.  It would be cool to get that working!
 
+It seemed like the white Lexus didn't get tracked as it moved farther down the road from the vehicle.  I would like to continue refining the HOG sub-sampling a bit more to implement multiple scales at different y-start/y-stop and x-start/x-stop window sets.  Combined with a more sophisticated heatmap cache mechanism (like multiple deques per scale-level) may allow for tracking further down the road.
+ 
+Also, to stabilize the bounding boxes, I should save the previous box coordinates and average them.  This would make the boxes much less jumpy.  
+
+Finally, there are also some false positives on the other side of traffic.  In one instance, it seems to track another car, but in another case, it looks like it's tracking a tree.  For both situations, limiting the sub-sampling x-axis range might reduce these false positives.  I'm also curious about how undistorting the image (like in project 4) might reduce false positives.
+    
+####Failure points
+When two vehicles that were being tracked got close to one another, they became one larger bounding box.  Tracking obscured objects causes this model to fail.
+ 
+Also, the training data may not contain examples of all possible cars that might be encountered.  Some cars might have edges or colors that don't fit any features that were extracted from the training data.  In that case, the model would fail to recognize the car.
+ 
+####Reflection
+ 
+This project was one of my favorites because the presentations, lectures, quizes and rubric seemed much more refined.  It was easier to consume the content and easier to implement the project.
+
+I think this can be implemented using deep-learning and many students want to shy away from traditional CV modelling, but it's important to be familiar with current industry practices.
