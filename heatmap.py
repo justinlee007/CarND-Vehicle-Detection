@@ -1,13 +1,25 @@
+import argparse
+import glob
+
 import matplotlib
 
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
-
-from trainer import *
-from scipy.ndimage.measurements import label
+import matplotlib.image as mpimg
+import numpy as np
+import trainer
+import detection
+import scipy.ndimage.measurements as measurement
 
 if __name__ == "__main__":
-    svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins = load_svc()
+    parser = argparse.ArgumentParser(description="Utility for visualizing color histogram feature extraction")
+    parser.add_argument("-show", action="store_true", help="Show each channel histogram")
+    parser.add_argument("-save", action="store_true", help="Save histogram visualization")
+    results = parser.parse_args()
+    show = bool(results.show)
+    save = bool(results.save)
+
+    svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins = trainer.load_svc()
     images = glob.glob("test_images/test*.jpg")
     images.append("test_images/bbox-example-image.jpg")
     for image_file in images:
@@ -22,17 +34,15 @@ if __name__ == "__main__":
         image = image.astype(np.float32) / 255
         print("min={}, max={}".format(np.min(image), np.max(image)))
 
-        img_boxes, heatmap = find_cars(image, y_start, y_stop, scale, svc, X_scaler, orient, pix_per_cell,
-                                       cell_per_block, spatial_size, hist_bins)
+        img_boxes, heatmap = detection.find_cars(image, y_start, y_stop, scale, svc, X_scaler, orient, pix_per_cell,
+                                                 cell_per_block, spatial_size, hist_bins)
 
-        heatmap = apply_threshold(heatmap, 2)
-
-        # heatmap = np.clip(heat, 0, 255)
+        heatmap = detection.apply_threshold(heatmap, 2)
 
         # Find final boxes from heatmap using label function
-        labels = label(heatmap)
+        labels = measurement.label(heatmap)
 
-        draw_img = draw_labeled_bboxes(np.copy(image), labels)
+        draw_img = detection.draw_labeled_bboxes(np.copy(image), labels)
         fig = plt.figure()
         plt.subplot(121)
         plt.imshow(draw_img)

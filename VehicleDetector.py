@@ -1,9 +1,10 @@
 import collections
 
-from scipy.ndimage.measurements import label
+import numpy as np
+import scipy.ndimage.measurements as measurements
 
-from detection import *
-from trainer import load_svc
+import detection
+import trainer
 
 
 class VehicleDetector:
@@ -21,7 +22,7 @@ class VehicleDetector:
 
     def init_svc(self):
         self.svc, self.X_scaler, self.orient, self.pix_per_cell, \
-        self.cell_per_block, self.spatial_size, self.hist_bins = load_svc()
+        self.cell_per_block, self.spatial_size, self.hist_bins = trainer.load_svc()
 
     def find_cars(self, image, scale):
         if self.initialized is False:
@@ -30,8 +31,8 @@ class VehicleDetector:
         y = image.shape[0]
         y_start = 400
         y_stop = y - 64
-        return find_cars(image, y_start, y_stop, scale, self.svc, self.X_scaler, self.orient, self.pix_per_cell,
-                         self.cell_per_block, self.spatial_size, self.hist_bins)
+        return detection.find_cars(image, y_start, y_stop, scale, self.svc, self.X_scaler, self.orient,
+                                   self.pix_per_cell, self.cell_per_block, self.spatial_size, self.hist_bins)
 
     def process_image(self, image):
         # Uncomment the following line if you extracted training data from .png images (scaled 0 to 1 by mpimg) and the
@@ -44,11 +45,11 @@ class VehicleDetector:
 
         combined_heatmap = np.zeros_like(image[:, :, 0])
         for boxes in self.box_deque:
-            add_heat(combined_heatmap, boxes)
+            detection.add_heat(combined_heatmap, boxes)
 
-        combined_heatmap = apply_threshold(combined_heatmap, 4)
+        combined_heatmap = detection.apply_threshold(combined_heatmap, 4)
 
         # Find final boxes from heatmap using label function
-        labels = label(combined_heatmap)
-        image = draw_labeled_bboxes(image, labels, color=(0, 0, 255))
+        labels = measurements.label(combined_heatmap)
+        image = detection.draw_labeled_bboxes(image, labels, color=(0, 0, 255))
         return image

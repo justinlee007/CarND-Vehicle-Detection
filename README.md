@@ -24,7 +24,7 @@ The images for classification are in `vehicles` and `non_vehicles` symlink.  The
 [image7]: ./examples/output_bboxes.png
 [video1]: https://youtu.be/qrLMPmFXFF8
 
-# [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
+# [Rubric Points](https://review.udacity.com/#!/rubrics/513/view)
 
 ##Feature Extraction
 ###1. Explain how (and identify where in your code) you extracted features from the training images.
@@ -137,6 +137,18 @@ However, I wanted to use the subsample feature as a sliding window mechanism lat
 
 ###3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
+Classifier training occurs in `trainer.train_classifier` in the following order:
+
+1. Car and non-car images are loaded into memory
+2. Features are extracted using the process above into vector (`vstack`)
+3. A per-column scaler is fit to the vector for normalization
+4. A label vector is created and initialized using the length of the car and non-car image sets (with 1s for cars and 0s for non-cars)
+5. The data is split into training and test sets with 20% as the test size
+6. A LinearSVC then trains the model on the training set
+7. The model is tested on the test set and the score is displayed
+8. If specified, the model is saved (along with all relevant training parameters) as a pickled file on the disk
+
+The `trainer` file usage is as follows:
 ```
 usage: trainer.py [-h] [-save]
 
@@ -146,7 +158,7 @@ optional arguments:
   -h, --help  show this help message and exit
   -save       Pickle SVC, Scalar and training parameters
 ```
-I trained a linear SVM using...
+Here is the console output when I trained my model:
 ```
 len(cars)=8792, len(notcars)=8968
 orient=9, pix_per_cell=8, cell_per_block=2 
@@ -172,6 +184,20 @@ Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spat
 ## Video Implementation
 
 ###1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
+
+Video processing functionality is in `pipeline`, where the test video can be specified as a command-line arg:
+
+```
+usage: pipeline.py [-h] [-test]
+
+Main entry for vehicle detection project
+
+optional arguments:
+  -h, --help  show this help message and exit
+  -test       Use test video
+```
+
+
 Here's a [link to my video result][video1]
 
 

@@ -1,12 +1,17 @@
+import glob
+import time
+
 import matplotlib
 
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
-from trainer import *
-from pipeline import *
+import matplotlib.image as mpimg
+import numpy as np
+import detection
+import trainer
 
 if __name__ == '__main__':
-    svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins = load_svc()
+    svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins = trainer.load_svc()
     t = time.time()
     images = glob.glob("test_images/test*.jpg")
     images.append("test_images/bbox-example-image.jpg")
@@ -24,10 +29,10 @@ if __name__ == '__main__':
 
         scale = 2
 
-        img_boxes, heatmap = find_cars(image, y_start, y_stop, scale, svc, X_scaler, orient, pix_per_cell,
-                                       cell_per_block, spatial_size, hist_bins)
+        img_boxes, heatmap = detection.find_cars(image, y_start, y_stop, scale, svc, X_scaler, orient, pix_per_cell,
+                                                 cell_per_block, spatial_size, hist_bins)
         if len(img_boxes) > 0:
-            image = draw_boxes(image, img_boxes, color=(0, 0, 1), thick=6)
+            image = detection.draw_boxes(image, img_boxes, color=(0, 0, 1), thick=6)
 
         plt.imshow(image)
         plt.show()
