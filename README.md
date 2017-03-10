@@ -19,9 +19,9 @@ The images for classification are in `vehicles` and `non_vehicles` symlink.  The
 [image2]: ./output_images/spatial_bin_cutout6.png
 [image3]: ./output_images/color_histogram_cutout2.png
 [image4]: ./output_images/hog_features_31.png
-[image5]: ./examples/bboxes_and_heat.png
-[image6]: ./examples/labels_map.png
-[image7]: ./examples/output_bboxes.png
+[image5]: ./output_images/heatmap_test6.png
+[image6]: ./output_images/heatmap_label_test6.png
+[image7]: ./output_images/heatmap_thresh_label_test6.png
 [video1]: https://youtu.be/qrLMPmFXFF8
 
 # [Rubric Points](https://review.udacity.com/#!/rubrics/513/view)
@@ -179,7 +179,7 @@ Process finished with exit code 0
 
 I implemented both sliding multi-scale window search and a HOG sub-sampling window search.  My submission includes only the HOG sub-sampling search because it performed much faster and lowered training time drastically.
 
-#### Multi-window sliding search
+####Multi-window sliding search
 For the window search, the following parameters are used:
 
 1. size: a square search window size
@@ -197,20 +197,35 @@ In my testing for the multi-scale window search, I used the following scales and
 
 My tests for the multi-scale window search was satisfactory for the above parameters, but performed slowly.  
 
-#### HOG sub-sampling search
+####HOG sub-sampling search
 For HOG sub-sampling, the window size is fixed at (64, 64) and the sub-sampling is performed at scales (or multipliers) of the base window size.  The following parameters were used:
 
 1. y-start: starting pixel location on the y-axis (used to avoid searching the sky)
 2. y-stop: stop pixel location on the y-axes (used to avoid searching the hood)
 3. scale: the multiplier for the base (64, 64) window size
 
-I tested scales of 1, 1.5 and 2.  I also tested running the HOG sub-sampler multiple times at different scales.  I fould that the increase in vehicle detection and tracking was negligible for the extra scaling runs so my submission only uses scale of 1.5, y-start of 400 and y-stop of (y - 64)
+I tested scales of 1, 1.5 and 2.  I also tested running the HOG sub-sampler multiple times at different scales.  I found that the increase in vehicle detection and tracking was negligible for the extra scaling runs so my submission only uses scale of 1.5, y-start of 400 and y-stop of (y - 64)
 
 
 ###2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
-Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
+Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.
 
+The `heatmap` utility visualizes the complete pipeline:
+```
+usage: heatmap.py [-h] [-show] [-save] [-thresh] [-label]
+
+Utility for visualizing vehicle detection heatmap
+
+optional arguments:
+  -h, --help  show this help message and exit
+  -show       Show vehicle detection boxes with corresponding heatmap
+  -save       Save example image to disk
+  -thresh     Apply threshold value of 2 for heatmap
+  -label      Use heatmap-based labeled bounding boxes
+```
+![][image5]
+#####HOG sub-sampling with heatmap using bounding boxes (no threshold, no label)
 ## Video Implementation
 
 ###1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
@@ -233,19 +248,18 @@ Here's a [link to my video result][video1]
 
 ###2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
-I recorded the positions of positive detections in each frame of the video.  From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.  I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heatmap.  I then assumed each blob corresponded to a vehicle.  I constructed bounding boxes to cover the area of each blob detected.  
+I recorded the positions of positive detections in each frame of the video.  From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.  I then used `scipy.ndimage.measurements.label` to identify individual blobs in the heatmap.  I then assumed each blob corresponded to a vehicle.  I constructed bounding boxes to cover the area of each blob detected.  
 
-Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
-
-
-![alt text][image5]
-##### Here are six frames and their corresponding heatmaps:
+The `heatmap` utility from above allows for visualizing the difference between using just bounding boxes with usage of `scipy.ndimage.measurements.label` function and also thresholding:
 
 ![alt text][image6]
-##### Here is the output of `scipy.ndimage.measurements.label()` on the integrated heatmap from all six frames:
+#####HOG sub-sampling with heatmap using `measurements.label` for bounding box
 
 ![alt text][image7]
-##### Here the resulting bounding boxes are drawn onto the last frame in the series:
+#####HOG sub-sampling with heatmap using `measurements.label` for bounding box with thresholding
+
+####Bounding box cache
+Finally, I created `VehicleDetector` class to load the SVC from disk only once during video processing.  This class also used a deque data structure to save the 5 previous sets of image boxes.  For each video frame, while preparing to draw new boxes, the heatmap would be summed through the set of previous bounding boxes.  In this way, I was able to raise the threshold value to 4 and remove much more false positives.  
 
 ##Discussion
 
