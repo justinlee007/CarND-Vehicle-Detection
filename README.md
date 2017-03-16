@@ -1,4 +1,4 @@
-#Vehicle Detection Project
+# Vehicle Detection Project
 [![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
 This project utilizes a software pipeline to classify vehicles and track them in a video.
@@ -26,8 +26,8 @@ The images for classification are in `vehicles` and `non_vehicles` symlink.  Bec
 
 # [Rubric Points](https://review.udacity.com/#!/rubrics/513/view)
 
-##Feature Extraction
-###1. Explain how (and identify where in your code) you extracted features from the training images.
+## Feature Extraction
+### 1. Explain how (and identify where in your code) you extracted features from the training images.
 
 I started by reading in all the `vehicle` and `non-vehicle` images.  This code is in the `trainer.load_features` method.  The file `car_notcar` is a utility that loads the images and displays a sample one:
 ```
@@ -105,9 +105,9 @@ optional arguments:
   -save       Save HOG image
 ```
 ![][image4]
-#####This example HOG feature plot uses the `YCrCb` color space with parameters of `orient=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`
+##### This example HOG feature plot uses the `YCrCb` color space with parameters of `orient=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`
 
-###2. Explain how you settled on your final choice of HOG parameters.
+### 2. Explain how you settled on your final choice of HOG parameters.
 
 The bin spatial parameters are as follows:
 
@@ -135,7 +135,7 @@ However, I wanted to use the subsample feature as a sliding window mechanism lat
 
 `(orient = 9, pix_per_cell = (8, 8), cell_per_block = (2, 2))`
 
-###3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
+### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
 Classifier training occurs in `trainer.train_classifier` in the following order:
 
@@ -171,13 +171,13 @@ Saving to file:			svc_pickle.p
 Process finished with exit code 0
 ```
 
-##Sliding Window Search
+## Sliding Window Search
 
-###1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
+### 1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
 I implemented both sliding multi-scale window search and a HOG sub-sampling window search.  My submission includes only the HOG sub-sampling search because it performed much faster and video processing time drastically.
 
-####Multi-window sliding search
+#### Multi-window sliding search
 For the window search, the following parameters are used:
 
 1. size: a square search window size
@@ -195,7 +195,7 @@ In my testing for the multi-scale window search, I used the following scales and
 
 My tests for the multi-scale window search was satisfactory for the above parameters, but performed slowly.  
 
-####HOG sub-sampling search
+#### HOG sub-sampling search
 For HOG sub-sampling, the window size is fixed at (64, 64) and the sub-sampling is performed at scales (or multipliers) of the base window size.  The following parameters were used:
 
 1. y-start: starting pixel location on the y-axis (used to avoid searching the sky)
@@ -205,7 +205,7 @@ For HOG sub-sampling, the window size is fixed at (64, 64) and the sub-sampling 
 I tested scales of 1, 1.5 and 2.  I also tested running the HOG sub-sampler multiple times at different scales.  I found that the increase in vehicle detection and tracking was negligible for the extra scaling runs so my submission only uses scale of 1.5, y-start of 400 and y-stop of (y - 64)
 
 
-###2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
+### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
 Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.
 
@@ -223,10 +223,10 @@ optional arguments:
   -label      Use heatmap-based labeled bounding boxes
 ```
 ![][image5]
-#####HOG sub-sampling with heatmap using bounding boxes (no threshold, no label)
+##### HOG sub-sampling with heatmap using bounding boxes (no threshold, no label)
 ## Video Implementation
 
-###1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
+### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
 
 Video processing functionality is in `pipeline`, where the test video can be specified as a command-line arg:
 
@@ -244,26 +244,26 @@ optional arguments:
 Here's a [link to my video result][video1]
 
 
-###2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
+### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
 I recorded the positions of positive detections in each frame of the video.  From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.  I then used `scipy.ndimage.measurements.label` to identify individual blobs in the heatmap.  I then assumed each blob corresponded to a vehicle.  I constructed bounding boxes to cover the area of each blob detected.  
 
 The `heatmap` utility from above allows for visualizing the difference between using just bounding boxes with usage of `scipy.ndimage.measurements.label` function and also thresholding:
 
 ![alt text][image6]
-#####HOG sub-sampling with heatmap using `measurements.label` for bounding box
+##### HOG sub-sampling with heatmap using `measurements.label` for bounding box
 
 ![alt text][image7]
-#####HOG sub-sampling with heatmap using `measurements.label` for bounding box with thresholding
+##### HOG sub-sampling with heatmap using `measurements.label` for bounding box with thresholding
 
-####Bounding box cache
+#### Bounding box cache
 Finally, I created `VehicleDetector` class to load the SVC from disk only once during video processing.  This class also used a deque data structure to save the 5 previous sets of image boxes.  For each video frame, while preparing to draw new boxes, the heatmap would be summed through the set of previous bounding boxes.  In this way, I was able to raise the threshold value to 4 and remove much more false positives.  
 
-##Discussion
+## Discussion
 
-###1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
+### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-####Project Improvements
+#### Project Improvements
 I didn't complete the challenge of combining the advanced lane-finding with the vehicle detection.  It would be cool to get that working!
 
 It seemed like the white Lexus didn't get tracked as it moved farther down the road from the vehicle.  I would like to continue refining the HOG sub-sampling a bit more to implement multiple scales at different y-start/y-stop and x-start/x-stop window sets.  Combined with a more sophisticated heatmap cache mechanism (like multiple deques per scale-level) may allow for tracking further down the road.
@@ -272,12 +272,12 @@ Also, to stabilize the bounding boxes, I should save the previous box coordinate
 
 Finally, there are also some false positives on the other side of traffic.  In one instance, it seems to track another car, but in another case, it looks like it's tracking a tree.  For both situations, limiting the sub-sampling x-axis range might reduce these false positives.  I'm also curious about how undistorting the image (like in project 4) might reduce false positives.
     
-####Failure points
+#### Failure points
 When two vehicles that were being tracked got close to one another, they became one larger bounding box.  Tracking obscured objects causes this model to fail.
  
 Also, the training data may not contain examples of all possible cars that might be encountered.  Some cars might have edges or colors that don't fit any features that were extracted from the training data.  In that case, the model would fail to recognize the car.
  
-####Reflection
+#### Reflection
  
 This project was one of my favorites because the presentations, lectures, quizes and rubric seemed much more refined.  It was easier to consume the content and easier to implement the project.
 
