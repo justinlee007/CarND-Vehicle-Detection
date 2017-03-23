@@ -17,8 +17,8 @@ class VehicleDetector:
         self.cell_per_block = None
         self.spatial_size = None
         self.hist_bins = None
-        self.box_deque = collections.deque([], maxlen=5)
-        self.scale = 1.5
+        self.box_deques = [collections.deque([], maxlen=5), collections.deque([], maxlen=5)]
+        self.scales = [1.5, 2]
 
     def init_svc(self):
         self.svc, self.X_scaler, self.orient, self.pix_per_cell, \
@@ -40,12 +40,15 @@ class VehicleDetector:
         draw_image = image.astype(np.float32) / 255
         # print("min={}, max={}".format(np.min(draw_image), np.max(draw_image)))
 
-        img_boxes, heatmap = self.find_cars(draw_image, self.scale)
-        self.box_deque.append(img_boxes)
-
         combined_heatmap = np.zeros_like(image[:, :, 0])
-        for boxes in self.box_deque:
-            detection.add_heat(combined_heatmap, boxes)
+        for index, scale in enumerate(self.scales):
+            box_deque = self.box_deques[index]
+
+            img_boxes, heatmap = self.find_cars(draw_image, scale)
+            box_deque.append(img_boxes)
+
+            for boxes in box_deque:
+                detection.add_heat(combined_heatmap, boxes)
 
         combined_heatmap = detection.apply_threshold(combined_heatmap, 4)
 
